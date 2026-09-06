@@ -1,0 +1,3078 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description"
+    content="MediCart Pharmacy - Online Pharmacy Management System with User & Admin Authentication, Prescription Verification & Inventory Control.">
+  <title>MediCart Pharmacy | Online Medicine Store & Management System</title>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@300;400;500;600;700&display=swap"
+    rel="stylesheet">
+
+  <style>
+    :root {
+      --primary-900: #082F24;
+      --primary-800: #0B3B2E;
+      --primary-700: #0E8A5A;
+      --primary-600: #129966;
+      --primary-500: #10B981;
+      --primary-100: #D1FAE5;
+      --primary-50: #EAF6F0;
+
+      --ink-primary: #0F172A;
+      --ink-secondary: #334155;
+      --ink-muted: #64748B;
+      --paper-bg: #FFFFFF;
+      --surface-bg: #F8FAFC;
+      --card-bg: #FFFFFF;
+      --line-border: #E2E8F0;
+
+      --amber-600: #D97706;
+      --amber-50: #FFFBEB;
+      --red-600: #DC2626;
+      --red-50: #FEF2F2;
+      --blue-600: #2563EB;
+      --blue-50: #EFF6FF;
+
+      --radius-sm: 8px;
+      --radius-md: 12px;
+      --radius-lg: 18px;
+      --radius-full: 9999px;
+
+      --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04);
+      --shadow-md: 0 4px 14px rgba(14, 138, 90, 0.08);
+      --shadow-lg: 0 10px 30px rgba(0, 0, 0, 0.1);
+      --transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    [data-theme="dark"] {
+      --ink-primary: #F8FAFC;
+      --ink-secondary: #CBD5E1;
+      --ink-muted: #94A3B8;
+      --paper-bg: #0B1310;
+      --surface-bg: #111C18;
+      --card-bg: #16241F;
+      --line-border: #23362E;
+      --primary-50: #162E25;
+      --shadow-md: 0 4px 20px rgba(0, 0, 0, 0.3);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html,
+    body {
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      color: var(--ink-primary);
+      background: var(--paper-bg);
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+      min-height: 100vh;
+    }
+
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+      font-family: 'Space Grotesk', sans-serif;
+      color: var(--ink-primary);
+      letter-spacing: -0.01em;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    button {
+      font-family: inherit;
+      cursor: pointer;
+      border: none;
+      background: none;
+    }
+
+    input,
+    select,
+    textarea {
+      font-family: inherit;
+      font-size: 14px;
+      color: var(--ink-primary);
+    }
+
+    :focus-visible {
+      outline: 2px solid var(--primary-700);
+      outline-offset: 2px;
+    }
+
+    /* ---------- PAGE ROUTING FADE ---------- */
+    .page {
+      display: none;
+    }
+
+    .page.active {
+      display: block;
+      animation: fadeIn 0.25s ease-out;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(6px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* ---------- REUSABLE COMPONENTS ---------- */
+    .container {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 0 5vw;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      border-radius: var(--radius-sm);
+      padding: 11px 20px;
+      font-weight: 600;
+      font-size: 14px;
+      border: 1px solid transparent;
+      transition: var(--transition);
+      white-space: nowrap;
+    }
+
+    .btn:active {
+      transform: scale(0.98);
+    }
+
+    .btn-primary {
+      background: var(--primary-700);
+      color: #ffffff;
+    }
+
+    .btn-primary:hover {
+      background: var(--primary-600);
+      box-shadow: 0 4px 12px rgba(14, 138, 90, 0.25);
+    }
+
+    .btn-secondary {
+      background: var(--primary-50);
+      color: var(--primary-700);
+      border-color: var(--primary-100);
+    }
+
+    .btn-secondary:hover {
+      background: var(--primary-100);
+    }
+
+    .btn-outline {
+      background: transparent;
+      border-color: var(--primary-700);
+      color: var(--primary-700);
+    }
+
+    .btn-outline:hover {
+      background: var(--primary-50);
+    }
+
+    .btn-ghost {
+      background: transparent;
+      color: var(--ink-muted);
+      border-color: var(--line-border);
+    }
+
+    .btn-ghost:hover {
+      border-color: var(--primary-700);
+      color: var(--primary-700);
+    }
+
+    .btn-danger {
+      background: transparent;
+      color: var(--red-600);
+      border-color: var(--red-600);
+    }
+
+    .btn-danger:hover {
+      background: var(--red-50);
+    }
+
+    .btn-sm {
+      padding: 6px 14px;
+      font-size: 13px;
+    }
+
+    .btn-lg {
+      padding: 14px 28px;
+      font-size: 16px;
+    }
+
+    .btn-block {
+      width: 100%;
+    }
+
+    .card {
+      border: 1px solid var(--line-border);
+      border-radius: var(--radius-md);
+      padding: 24px;
+      background: var(--card-bg);
+      transition: var(--transition);
+    }
+
+    .muted {
+      color: var(--ink-muted);
+    }
+
+    .small {
+      font-size: 13px;
+    }
+
+    .divider {
+      height: 1px;
+      background: var(--line-border);
+      margin: 24px 0;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 12px;
+      font-weight: 600;
+      padding: 4px 10px;
+      border-radius: var(--radius-full);
+    }
+
+    .badge-green {
+      background: var(--primary-50);
+      color: var(--primary-700);
+      border: 1px solid var(--primary-100);
+    }
+
+    .badge-amber {
+      background: var(--amber-50);
+      color: var(--amber-600);
+      border: 1px solid #FDE68A;
+    }
+
+    .badge-red {
+      background: var(--red-50);
+      color: var(--red-600);
+      border: 1px solid #FECACA;
+    }
+
+    .badge-grey {
+      background: var(--surface-bg);
+      color: var(--ink-muted);
+      border: 1px solid var(--line-border);
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin-bottom: 16px;
+    }
+
+    .field label {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--ink-secondary);
+    }
+
+    .field input,
+    .field select,
+    .field textarea {
+      border: 1px solid var(--line-border);
+      border-radius: var(--radius-sm);
+      padding: 10px 14px;
+      background: var(--card-bg);
+      color: var(--ink-primary);
+      transition: var(--transition);
+    }
+
+    .field input:focus,
+    .field select:focus,
+    .field textarea:focus {
+      border-color: var(--primary-700);
+      box-shadow: 0 0 0 3px rgba(14, 138, 90, 0.12);
+      outline: none;
+    }
+
+    /* ---------- NAVBAR ---------- */
+    .header-nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: var(--card-bg);
+      border-bottom: 1px solid var(--line-border);
+      backdrop-filter: blur(12px);
+    }
+
+    .nav-wrap {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      padding: 12px 5vw;
+      height: 68px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-family: 'Space Grotesk';
+      font-weight: 700;
+      font-size: 20px;
+      cursor: pointer;
+    }
+
+    .brand-mark {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      background: var(--primary-700);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      box-shadow: 0 4px 10px rgba(14, 138, 90, 0.3);
+    }
+
+    .brand-mark svg {
+      width: 20px;
+      height: 20px;
+      stroke: #fff;
+      fill: none;
+      stroke-width: 2.2;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+    }
+
+    .nav-links a {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--ink-secondary);
+      padding: 8px 0;
+      border-bottom: 2px solid transparent;
+      transition: var(--transition);
+      cursor: pointer;
+    }
+
+    .nav-links a.active,
+    .nav-links a:hover {
+      color: var(--primary-700);
+      border-color: var(--primary-700);
+    }
+
+    .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    /* Live Search Box */
+    .search-container {
+      position: relative;
+    }
+
+    .search-box {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      border: 1px solid var(--line-border);
+      border-radius: var(--radius-sm);
+      padding: 8px 12px;
+      background: var(--surface-bg);
+      width: 220px;
+      transition: var(--transition);
+    }
+
+    .search-box:focus-within {
+      border-color: var(--primary-700);
+      background: var(--card-bg);
+      width: 260px;
+    }
+
+    .search-box input {
+      border: none;
+      outline: none;
+      background: transparent;
+      flex: 1;
+      font-size: 13px;
+    }
+
+    .search-suggestions {
+      position: absolute;
+      top: calc(100% + 6px);
+      left: 0;
+      right: 0;
+      background: var(--card-bg);
+      border: 1px solid var(--line-border);
+      border-radius: var(--radius-sm);
+      box-shadow: var(--shadow-lg);
+      max-height: 280px;
+      overflow-y: auto;
+      display: none;
+      z-index: 150;
+    }
+
+    .search-suggestions.active {
+      display: block;
+    }
+
+    .search-item {
+      padding: 10px 14px;
+      font-size: 13px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--line-border);
+      cursor: pointer;
+    }
+
+    .search-item:hover {
+      background: var(--primary-50);
+    }
+
+    .icon-btn {
+      position: relative;
+      width: 40px;
+      height: 40px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--line-border);
+      background: var(--card-bg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--ink-secondary);
+      transition: var(--transition);
+    }
+
+    .icon-btn:hover {
+      border-color: var(--primary-700);
+      color: var(--primary-700);
+      background: var(--primary-50);
+    }
+
+    .cart-badge {
+      position: absolute;
+      top: -5px;
+      right: -5px;
+      background: var(--red-600);
+      color: #fff;
+      font-size: 11px;
+      font-weight: 700;
+      min-width: 18px;
+      height: 18px;
+      border-radius: 999px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0 4px;
+      border: 2px solid var(--card-bg);
+    }
+
+    .mobile-toggle {
+      display: none;
+      width: 40px;
+      height: 40px;
+      border: 1px solid var(--line-border);
+      border-radius: var(--radius-sm);
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* Admin Nav Styling */
+    .admin-nav {
+      background: var(--primary-900);
+      color: #fff;
+      border-bottom: none;
+    }
+
+    .admin-nav .brand {
+      color: #fff;
+    }
+
+    .admin-nav .nav-links a {
+      color: #A7F3D0;
+    }
+
+    .admin-nav .nav-links a.active,
+    .admin-nav .nav-links a:hover {
+      color: #fff;
+      border-color: #fff;
+    }
+
+    /* ---------- HERO SECTION ---------- */
+    .hero-section {
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 48px;
+      padding: 60px 5vw;
+      background: linear-gradient(135deg, var(--primary-50) 0%, var(--surface-bg) 100%);
+      align-items: center;
+      border-bottom: 1px solid var(--line-border);
+    }
+
+    .hero-content h1 {
+      font-size: clamp(2.2rem, 4vw, 3.4rem);
+      line-height: 1.1;
+      margin-bottom: 18px;
+    }
+
+    .hero-content h1 span {
+      color: var(--primary-700);
+    }
+
+    .hero-content p {
+      font-size: 16px;
+      color: var(--ink-muted);
+      max-width: 48ch;
+      margin-bottom: 28px;
+      line-height: 1.6;
+    }
+
+    .hero-btns {
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+
+    .hero-graphic {
+      width: 100%;
+      height: auto;
+      filter: drop-shadow(0 10px 20px rgba(14, 138, 90, 0.12));
+    }
+
+    /* ---------- TRUST & STATS ROWS ---------- */
+    .trust-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 20px;
+      padding: 30px 5vw;
+      border-bottom: 1px solid var(--line-border);
+      background: var(--card-bg);
+    }
+
+    .trust-card {
+      display: flex;
+      gap: 14px;
+      align-items: flex-start;
+    }
+
+    .trust-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: var(--radius-md);
+      background: var(--primary-50);
+      color: var(--primary-700);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .trust-icon svg {
+      width: 22px;
+      height: 22px;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 1.8;
+    }
+
+    .trust-card h4 {
+      font-size: 15px;
+      margin-bottom: 2px;
+    }
+
+    .trust-card p {
+      font-size: 13px;
+      color: var(--ink-muted);
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
+      padding: 36px 5vw;
+      background: var(--surface-bg);
+      text-align: center;
+      border-bottom: 1px solid var(--line-border);
+    }
+
+    .stat-card b {
+      display: block;
+      font-family: 'Space Grotesk';
+      font-size: 32px;
+      color: var(--primary-700);
+      margin-bottom: 4px;
+    }
+
+    .stat-card span {
+      font-size: 13px;
+      color: var(--ink-muted);
+      font-weight: 500;
+    }
+
+    /* ---------- BROWSE CATEGORIES GRID ---------- */
+    .browse-header {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      margin-bottom: 24px;
+    }
+
+    .cat-cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+      gap: 16px;
+      margin-bottom: 48px;
+    }
+
+    .cat-card {
+      border: 1px solid var(--line-border);
+      border-radius: var(--radius-md);
+      padding: 22px 14px;
+      text-align: center;
+      background: var(--card-bg);
+      transition: var(--transition);
+      cursor: pointer;
+    }
+
+    .cat-card:hover {
+      border-color: var(--primary-700);
+      background: var(--primary-50);
+      transform: translateY(-3px);
+    }
+
+    .cat-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: var(--primary-50);
+      color: var(--primary-700);
+      margin: 0 auto 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .cat-card b {
+      display: block;
+      font-size: 14px;
+      margin-bottom: 2px;
+    }
+
+    .cat-card span {
+      font-size: 12px;
+      color: var(--ink-muted);
+    }
+
+    /* ---------- MEDICINE CATALOGUE ---------- */
+    .med-layout {
+      display: grid;
+      grid-template-columns: 260px 1fr;
+      gap: 32px;
+      padding: 32px 5vw 64px;
+      align-items: start;
+    }
+
+    .filter-sidebar h4 {
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--ink-muted);
+      margin-bottom: 16px;
+    }
+
+    .filter-group {
+      margin-bottom: 22px;
+    }
+
+    .filter-group .fg-title {
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 10px;
+      color: var(--ink-secondary);
+    }
+
+    .chip-list label {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 13.5px;
+      padding: 5px 0;
+      color: var(--ink-secondary);
+      cursor: pointer;
+    }
+
+    .chip-list input[type="checkbox"] {
+      accent-color: var(--primary-700);
+      width: 16px;
+      height: 16px;
+    }
+
+    .med-toolbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .med-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+      gap: 20px;
+    }
+
+    .med-card {
+      border: 1px solid var(--line-border);
+      border-radius: var(--radius-md);
+      padding: 18px;
+      background: var(--card-bg);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 12px;
+      transition: var(--transition);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .med-card:hover {
+      border-color: var(--primary-700);
+      box-shadow: var(--shadow-md);
+      transform: translateY(-2px);
+    }
+
+    .med-thumb {
+      width: 100%;
+      height: 120px;
+      border-radius: var(--radius-sm);
+      background: var(--primary-50);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--primary-700);
+    }
+
+    .med-card h4 {
+      font-size: 15px;
+      font-weight: 600;
+      line-height: 1.3;
+      cursor: pointer;
+    }
+
+    .med-card h4:hover {
+      color: var(--primary-700);
+    }
+
+    .med-rating {
+      font-size: 12.5px;
+      color: var(--amber-600);
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .med-rating span {
+      color: var(--ink-muted);
+    }
+
+    .med-price-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: auto;
+      padding-top: 8px;
+    }
+
+    .med-price {
+      font-family: 'Space Grotesk';
+      font-weight: 700;
+      font-size: 18px;
+      color: var(--ink-primary);
+    }
+
+    /* ---------- DETAIL PAGE ---------- */
+    .detail-layout {
+      display: grid;
+      grid-template-columns: 320px 1fr 300px;
+      gap: 32px;
+      padding: 24px 5vw 40px;
+      align-items: start;
+    }
+
+    .detail-img {
+      width: 100%;
+      aspect-ratio: 1;
+      border-radius: var(--radius-md);
+      background: var(--primary-50);
+      border: 1px solid var(--line-border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--primary-700);
+    }
+
+    .detail-info h2 {
+      font-size: 26px;
+      margin: 8px 0 4px;
+    }
+
+    .detail-price {
+      font-family: 'Space Grotesk';
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--primary-700);
+      margin: 16px 0;
+    }
+
+    .qty-stepper {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+
+    .qty-btn {
+      width: 36px;
+      height: 36px;
+      border: 1px solid var(--line-border);
+      background: var(--surface-bg);
+      border-radius: var(--radius-sm);
+      font-size: 16px;
+      font-weight: 600;
+    }
+
+    .qty-val {
+      width: 40px;
+      text-align: center;
+      font-weight: 600;
+      font-size: 15px;
+    }
+
+    .tab-nav {
+      display: flex;
+      gap: 32px;
+      border-bottom: 1px solid var(--line-border);
+      margin: 30px 5vw 0;
+    }
+
+    .tab-btn {
+      padding: 12px 4px;
+      font-size: 15px;
+      color: var(--ink-muted);
+      font-weight: 500;
+      border-bottom: 2px solid transparent;
+      cursor: pointer;
+    }
+
+    .tab-btn.active {
+      color: var(--primary-700);
+      font-weight: 600;
+      border-color: var(--primary-700);
+    }
+
+    .tab-panel {
+      display: none;
+      padding: 24px 5vw;
+    }
+
+    .tab-panel.active {
+      display: block;
+    }
+
+    /* ---------- PRESCRIPTION & FILE UPLOAD ---------- */
+    .upload-dropzone {
+      border: 2px dashed var(--primary-600);
+      border-radius: var(--radius-md);
+      padding: 36px 20px;
+      text-align: center;
+      background: var(--primary-50);
+      color: var(--ink-secondary);
+      cursor: pointer;
+      transition: var(--transition);
+      margin-bottom: 20px;
+    }
+
+    .upload-dropzone:hover {
+      background: var(--primary-100);
+    }
+
+    .upload-dropzone svg {
+      width: 36px;
+      height: 36px;
+      stroke: var(--primary-700);
+      fill: none;
+      margin: 0 auto 10px;
+    }
+
+    /* ---------- TWO-COLUMN LAYOUTS ---------- */
+    .two-col {
+      display: grid;
+      grid-template-columns: 1.4fr 1fr;
+      gap: 32px;
+      padding: 32px 5vw 64px;
+      align-items: start;
+    }
+
+    .two-col.reverse {
+      grid-template-columns: 1fr 1.4fr;
+    }
+
+    /* Tables */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+    }
+
+    th {
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      color: var(--ink-muted);
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--line-border);
+      background: var(--surface-bg);
+    }
+
+    td {
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--line-border);
+      font-size: 14px;
+    }
+
+    tr:last-child td {
+      border-bottom: none;
+    }
+
+    .summary-line {
+      display: flex;
+      justify-content: space-between;
+      padding: 10px 0;
+      font-size: 14px;
+      color: var(--ink-secondary);
+    }
+
+    .summary-line.total {
+      color: var(--ink-primary);
+      font-weight: 700;
+      font-size: 18px;
+      border-top: 1px solid var(--line-border);
+      margin-top: 8px;
+      padding-top: 16px;
+    }
+
+    /* Payment Options */
+    .pay-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin: 16px 0;
+    }
+
+    .pay-box {
+      border: 1px solid var(--line-border);
+      border-radius: var(--radius-sm);
+      padding: 14px 10px;
+      text-align: center;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: var(--transition);
+      background: var(--card-bg);
+    }
+
+    .pay-box.selected {
+      border-color: var(--primary-700);
+      background: var(--primary-50);
+      color: var(--primary-700);
+    }
+
+    /* ---------- ORDER TRACKER ---------- */
+    .tracker-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 24px 10px;
+      position: relative;
+    }
+
+    .tracker-step {
+      flex: 1;
+      text-align: center;
+      position: relative;
+      z-index: 2;
+    }
+
+    .step-dot {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      border: 2px solid var(--line-border);
+      background: var(--card-bg);
+      margin: 0 auto 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: var(--transition);
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--ink-muted);
+    }
+
+    .step-line {
+      position: absolute;
+      top: 12px;
+      left: -50%;
+      width: 100%;
+      height: 3px;
+      background: var(--line-border);
+      z-index: -1;
+    }
+
+    .tracker-step:first-child .step-line {
+      display: none;
+    }
+
+    .tracker-step.done .step-dot {
+      background: var(--primary-700);
+      border-color: var(--primary-700);
+      color: #fff;
+    }
+
+    .tracker-step.done .step-line {
+      background: var(--primary-700);
+    }
+
+    .tracker-step span {
+      font-size: 12px;
+      color: var(--ink-muted);
+      font-weight: 500;
+    }
+
+    .tracker-step.done span {
+      color: var(--ink-primary);
+      font-weight: 600;
+    }
+
+    /* ---------- ADMIN DASHBOARD & CHARTS ---------- */
+    .kpi-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+      gap: 20px;
+      padding: 32px 5vw 16px;
+    }
+
+    .kpi-card {
+      border: 1px solid var(--line-border);
+      border-radius: var(--radius-md);
+      padding: 20px;
+      background: var(--card-bg);
+    }
+
+    .kpi-card span {
+      font-size: 13px;
+      color: var(--ink-muted);
+      font-weight: 500;
+    }
+
+    .kpi-card b {
+      display: block;
+      font-family: 'Space Grotesk';
+      font-size: 28px;
+      margin-top: 6px;
+      color: var(--ink-primary);
+    }
+
+    .chart-container {
+      display: flex;
+      align-items: flex-end;
+      gap: 16px;
+      height: 180px;
+      padding-top: 24px;
+      border-bottom: 1px solid var(--line-border);
+    }
+
+    .bar-column {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-end;
+      height: 100%;
+      gap: 8px;
+    }
+
+    .bar-fill {
+      width: 70%;
+      background: var(--primary-700);
+      border-radius: 6px 6px 0 0;
+      transition: height 0.5s ease;
+      position: relative;
+    }
+
+    .bar-fill:hover {
+      background: var(--primary-600);
+    }
+
+    .bar-val {
+      position: absolute;
+      top: -20px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--primary-700);
+    }
+
+    /* ---------- AUTH CONTAINER ---------- */
+    .auth-wrapper {
+      display: flex;
+      justify-content: center;
+      padding: 60px 5vw;
+    }
+
+    .auth-box {
+      width: 100%;
+      max-width: 440px;
+      border: 1px solid var(--line-border);
+      border-radius: var(--radius-md);
+      padding: 36px;
+      background: var(--card-bg);
+      box-shadow: var(--shadow-md);
+    }
+
+    .auth-tabs {
+      display: flex;
+      border: 1px solid var(--line-border);
+      border-radius: var(--radius-sm);
+      overflow: hidden;
+      margin-bottom: 24px;
+    }
+
+    .auth-tab {
+      flex: 1;
+      padding: 10px;
+      border: none;
+      background: var(--surface-bg);
+      font-weight: 600;
+      font-size: 14px;
+      color: var(--ink-muted);
+      cursor: pointer;
+      text-align: center;
+    }
+
+    .auth-tab.active {
+      background: var(--primary-700);
+      color: #fff;
+    }
+
+    /* ---------- BREADCRUMB & PAGE HEADERS ---------- */
+    .breadcrumb {
+      padding: 20px 5vw 0;
+      font-size: 13px;
+      color: var(--ink-muted);
+    }
+
+    .breadcrumb a {
+      color: var(--primary-700);
+      font-weight: 500;
+    }
+
+    .breadcrumb b {
+      color: var(--ink-primary);
+      font-weight: 600;
+    }
+
+    .page-head {
+      padding: 40px 5vw 8px;
+    }
+
+    .page-head h2 {
+      font-size: 28px;
+    }
+
+    .page-head p {
+      color: var(--ink-muted);
+      margin-top: 6px;
+      font-size: 15px;
+      max-width: 60ch;
+    }
+
+    /* ---------- TOAST & MODAL ---------- */
+    #toast {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: var(--primary-900);
+      color: #fff;
+      padding: 14px 22px;
+      border-radius: var(--radius-md);
+      font-size: 14px;
+      font-weight: 500;
+      box-shadow: var(--shadow-lg);
+      opacity: 0;
+      transform: translateY(20px);
+      pointer-events: none;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      z-index: 999;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    #toast.show {
+      opacity: 1;
+      transform: translateY(0);
+      pointer-events: auto;
+    }
+
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(4px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 200;
+      padding: 20px;
+    }
+
+    .modal-backdrop.active {
+      display: flex;
+      animation: fadeIn 0.2s ease;
+    }
+
+    .modal-card {
+      background: var(--card-bg);
+      border-radius: var(--radius-md);
+      max-width: 540px;
+      width: 100%;
+      padding: 28px;
+      border: 1px solid var(--line-border);
+      box-shadow: var(--shadow-lg);
+    }
+
+    /* ---------- FOOTER ---------- */
+    .footer {
+      background: var(--primary-900);
+      color: #D1FAE5;
+      padding: 60px 5vw 28px;
+      margin-top: 60px;
+    }
+
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 1.5fr 1fr 1fr 1fr;
+      gap: 40px;
+      margin-bottom: 40px;
+    }
+
+    .footer h4 {
+      color: #fff;
+      font-size: 15px;
+      margin-bottom: 16px;
+    }
+
+    .footer p,
+    .footer a {
+      font-size: 14px;
+      color: #A7F3D0;
+      display: block;
+      margin-bottom: 10px;
+    }
+
+    .footer a:hover {
+      color: #fff;
+    }
+
+    .footer-bottom {
+      border-top: 1px solid rgba(255, 255, 255, 0.12);
+      padding-top: 24px;
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+      font-size: 13px;
+      color: #6EE7B7;
+    }
+
+    /* ---------- RESPONSIVE MEDIA QUERIES ---------- */
+    @media (max-width: 1024px) {
+      .hero-section {
+        grid-template-columns: 1fr;
+        gap: 32px;
+      }
+
+      .detail-layout {
+        grid-template-columns: 1fr;
+      }
+
+      .two-col,
+      .two-col.reverse {
+        grid-template-columns: 1fr;
+      }
+
+      .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .footer-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .mobile-toggle {
+        display: flex;
+      }
+
+      .nav-links {
+        display: none;
+        position: absolute;
+        top: 68px;
+        left: 0;
+        right: 0;
+        background: var(--card-bg);
+        flex-direction: column;
+        padding: 16px 5vw;
+        border-bottom: 1px solid var(--line-border);
+        box-shadow: var(--shadow-lg);
+      }
+
+      .nav-links.open {
+        display: flex;
+      }
+
+      .search-container {
+        display: none;
+      }
+
+      .med-layout {
+        grid-template-columns: 1fr;
+      }
+
+      .stats-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .footer-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div id="toast"><svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" fill="none" stroke-width="2">
+      <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+      <polyline points="22 4 12 14.01 9 11.01" />
+    </svg><span id="toastMsg">Notification message</span></div>
+
+  <!-- ================= MODAL INVOICE / QUICK VIEW ================= -->
+  <div class="modal-backdrop" id="appModal">
+    <div class="modal-card" id="modalContent"></div>
+  </div>
+
+  <!-- ================= CUSTOMER NAV ================= -->
+  <header class="header-nav" id="customerNav">
+    <div class="nav-wrap">
+      <a class="brand" data-page="home">
+        <span class="brand-mark"><svg viewBox="0 0 24 24">
+            <path d="M12 3v18M3 12h18" />
+          </svg></span>
+        MediCart
+      </a>
+      <div class="nav-links" id="navLinks">
+        <a data-page="home">Home</a>
+        <a data-page="medicines">Medicines</a>
+        <a data-page="prescriptions">Prescriptions</a>
+        <a data-page="orders">Orders</a>
+        <a data-page="profile">Profile</a>
+        <a data-page="about">About Us</a>
+        <a data-page="contact">Contact</a>
+      </div>
+      <div class="nav-right">
+        <div class="search-container">
+          <div class="search-box">
+            <svg viewBox="0 0 24 24" width="16" height="16" stroke="var(--ink-muted)" fill="none" stroke-width="2">
+              <circle cx="11" cy="11" r="7" />
+              <path d="M21 21l-4-4" />
+            </svg>
+            <input id="searchInput" placeholder="Search medicines..." autocomplete="off">
+          </div>
+          <div class="search-suggestions" id="searchSuggestions"></div>
+        </div>
+
+        <button class="icon-btn" id="themeToggle" aria-label="Toggle Theme" title="Toggle Light/Dark Mode">
+          <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" fill="none" stroke-width="2">
+            <circle cx="12" cy="12" r="5" />
+            <path
+              d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42" />
+          </svg>
+        </button>
+
+        <button class="icon-btn" data-page="cart" aria-label="Cart" title="View Cart">
+          <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" fill="none" stroke-width="2">
+            <circle cx="9" cy="21" r="1" />
+            <circle cx="19" cy="21" r="1" />
+            <path d="M1 1h4l2.6 13.4a2 2 0 0 0 2 1.6h9.4a2 2 0 0 0 2-1.6L23 6H6" />
+          </svg>
+          <span class="cart-badge" id="cartCount">0</span>
+        </button>
+
+        <button class="btn btn-outline btn-sm" id="accountBtn" data-page="login">Login</button>
+        <button class="btn btn-ghost btn-sm" data-page="admin" style="padding:6px 10px;"
+          title="Pharmacist Portal">Portal</button>
+
+        <button class="mobile-toggle" id="menuToggle" aria-label="Toggle Navigation Menu">
+          <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" fill="none" stroke-width="2">
+            <path d="M3 6h18M3 12h18M3 18h18" />
+          </svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ================= ADMIN NAV ================= -->
+  <header class="header-nav admin-nav" id="adminNav" style="display:none;">
+    <div class="nav-wrap">
+      <a class="brand" data-page="admin">
+        <span class="brand-mark" style="background:#fff;"><svg viewBox="0 0 24 24" style="stroke:var(--primary-900)">
+            <path d="M12 3v18M3 12h18" />
+          </svg></span>
+        MediCart Pharmacist Admin
+      </a>
+      <div class="nav-links">
+        <a data-page="admin">Dashboard</a>
+        <a data-page="admin">Stock &amp; Expiry</a>
+        <a data-page="suppliers">Suppliers</a>
+        <a data-page="prescriptions">Rx Verification</a>
+        <a data-page="orders">Orders Console</a>
+      </div>
+      <div class="nav-right">
+        <span class="badge badge-green" id="adminNameBadge">Admin Mode</span>
+        <button class="btn btn-secondary btn-sm" data-page="home">Exit to Storefront</button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+
+    <!-- ================= 1. HOME ================= -->
+    <section class="page active" id="page-home">
+      <div class="hero-section">
+        <div class="hero-content">
+          <span class="badge badge-green" style="margin-bottom:14px;">Licensed Healthcare Partner</span>
+          <h1>Your health, <span>our priority.</span></h1>
+          <p>Order 100% genuine medicines online, upload prescriptions effortlessly for fast verification, and enjoy
+            instant home delivery.</p>
+          <div class="hero-btns">
+            <button class="btn btn-primary btn-lg" data-page="medicines">Order Medicines Now →</button>
+            <button class="btn btn-outline btn-lg" data-page="prescriptions">Upload Prescription</button>
+          </div>
+        </div>
+        <svg class="hero-graphic" viewBox="0 0 400 320" fill="none">
+          <rect x="120" y="50" width="160" height="220" rx="16" fill="var(--card-bg)" stroke="var(--primary-700)"
+            stroke-width="2" />
+          <rect x="150" y="25" width="100" height="40" rx="8" fill="var(--primary-700)" />
+          <line x1="200" y1="35" x2="200" y2="55" stroke="#fff" stroke-width="4" stroke-linecap="round" />
+          <line x1="190" y1="45" x2="210" y2="45" stroke="#fff" stroke-width="4" stroke-linecap="round" />
+          <circle cx="170" cy="120" r="16" fill="var(--primary-50)" stroke="var(--primary-600)" stroke-width="2" />
+          <circle cx="230" cy="120" r="16" fill="var(--amber-50)" stroke="var(--amber-600)" stroke-width="2" />
+          <rect x="155" y="160" width="90" height="12" rx="4" fill="var(--primary-100)" />
+          <rect x="155" y="180" width="60" height="12" rx="4" fill="var(--line-border)" />
+          <path d="M60 260 C 100 240, 140 280, 180 260" stroke="var(--primary-600)" stroke-width="4"
+            stroke-dasharray="6 6" />
+          <circle cx="60" cy="260" r="8" fill="var(--primary-700)" />
+          <circle cx="340" cy="100" r="28" fill="var(--primary-50)" />
+          <path d="M330 100 L338 108 L352 92" stroke="var(--primary-700)" stroke-width="3" stroke-linecap="round" />
+        </svg>
+      </div>
+
+      <div class="trust-grid">
+        <div class="trust-card">
+          <div class="trust-icon"><svg viewBox="0 0 24 24">
+              <path d="M12 2l8 4v6c0 5-3.5 8-8 10-4.5-2-8-5-8-10V6l8-4z" />
+            </svg></div>
+          <div>
+            <h4>Genuine Medicines</h4>
+            <p>100% original verified products direct from licensed manufacturers.</p>
+          </div>
+        </div>
+        <div class="trust-card">
+          <div class="trust-icon"><svg viewBox="0 0 24 24">
+              <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" />
+            </svg></div>
+          <div>
+            <h4>Express Delivery</h4>
+            <p>Get doorstep delivery within 2 hours in selected city locations.</p>
+          </div>
+        </div>
+        <div class="trust-card">
+          <div class="trust-icon"><svg viewBox="0 0 24 24">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+              <path d="M9 12l2 2 4-4" />
+            </svg></div>
+          <div>
+            <h4>Pharmacist Verified</h4>
+            <p>Every order and prescription double-checked by qualified experts.</p>
+          </div>
+        </div>
+        <div class="trust-card">
+          <div class="trust-icon"><svg viewBox="0 0 24 24">
+              <circle cx="12" cy="12" r="10" />
+              <path d="M12 6v6l4 2" />
+            </svg></div>
+          <div>
+            <h4>24/7 Support</h4>
+            <p>Round-the-clock medical consultation and customer service support.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="stats-grid">
+        <div class="stat-card"><b>3,500+</b><span>Medicines Available</span></div>
+        <div class="stat-card"><b>1,200+</b><span>Prescriptions Processed</span></div>
+        <div class="stat-card"><b>950+</b><span>Orders Delivered</span></div>
+        <div class="stat-card"><b>2,500+</b><span>Satisfied Customers</span></div>
+      </div>
+
+      <div class="container" style="padding-top:48px;">
+        <div class="browse-header">
+          <div>
+            <h2>Browse Medicines by Category</h2>
+            <p class="muted small">Explore our wide range of pharmaceutical and healthcare products.</p>
+          </div>
+          <button class="btn btn-outline btn-sm" data-page="medicines">View All Categories →</button>
+        </div>
+        <div class="cat-cards-grid" id="homeCatGrid"></div>
+      </div>
+
+      <div id="footerHome"></div>
+    </section>
+
+    <!-- ================= 2. MEDICINES ================= -->
+    <section class="page" id="page-medicines">
+      <div class="breadcrumb"><a data-page="home">Home</a> &gt; <b>Medicines Catalogue</b></div>
+
+      <div class="med-layout">
+        <aside class="filter-sidebar card">
+          <h4>Filter Catalogue</h4>
+
+          <div class="filter-group">
+            <div class="fg-title">Category</div>
+            <div class="chip-list" id="filterCategories"></div>
+          </div>
+
+          <div class="filter-group">
+            <div class="fg-title">Max Price: ₹<span id="priceVal">350</span></div>
+            <input type="range" id="priceRange" min="30" max="350" value="350"
+              style="width:100%;accent-color:var(--primary-700);">
+          </div>
+
+          <div class="filter-group">
+            <label class="small"><input type="checkbox" id="ratingFilter"> 4.5★ &amp; Above Rating</label>
+          </div>
+
+          <div class="filter-group">
+            <label class="small"><input type="checkbox" id="stockFilter"> In Stock Only</label>
+          </div>
+
+          <div class="filter-group">
+            <label class="small"><input type="checkbox" id="rxFilter"> OTC Only (No Rx Required)</label>
+          </div>
+
+          <button class="btn btn-ghost btn-block btn-sm" id="clearFilters">Reset All Filters</button>
+        </aside>
+
+        <div>
+          <div class="med-toolbar">
+            <span class="muted small" id="resultCount">Loading medicines...</span>
+            <div style="display:flex;align-items:center;gap:10px;">
+              <label class="small muted" for="sortSelect">Sort By:</label>
+              <select id="sortSelect"
+                style="border:1px solid var(--line-border);border-radius:var(--radius-sm);padding:8px 12px;background:var(--card-bg);">
+                <option value="top">Popularity / Top Rated</option>
+                <option value="low">Price: Low to High</option>
+                <option value="high">Price: High to Low</option>
+                <option value="name">Name: A to Z</option>
+              </select>
+            </div>
+          </div>
+          <div class="med-grid" id="medGrid"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= 3. MEDICINE DETAIL ================= -->
+    <section class="page" id="page-detail">
+      <div class="breadcrumb"><a data-page="home">Home</a> &gt; <a data-page="medicines">Medicines</a> &gt; <b
+          id="crumbMedName">Medicine Details</b></div>
+
+      <div class="detail-layout">
+        <div class="detail-img">
+          <svg viewBox="0 0 24 24" width="80" height="80" stroke="currentColor" fill="none" stroke-width="1.4">
+            <path d="M10.5 20.5L3.5 13.5a5 5 0 1 1 7-7l7 7a5 5 0 1 1-7 7z" />
+            <path d="M8.5 8.5l7 7" />
+          </svg>
+        </div>
+
+        <div class="detail-info">
+          <div style="display:flex;gap:8px;align-items:center;">
+            <span class="badge badge-green" id="detailCatBadge">Category</span>
+            <span class="badge badge-amber" id="detailRxBadge" style="display:none;">Prescription Required</span>
+          </div>
+          <h2 id="detailName">Medicine Name</h2>
+          <p class="muted small" id="detailManufacturer">Manufacturer: PharmaCare Labs</p>
+          <div style="display:flex;align-items:center;gap:8px;margin:12px 0;" class="small">
+            <span id="detailRating" style="color:var(--amber-600);font-weight:600;">★ 4.8</span>
+            <span class="muted" id="detailReviewCount">(120 reviews)</span>
+          </div>
+          <div class="detail-price" id="detailPrice">₹0</div>
+          <p class="muted small" id="detailStock">Status: In Stock</p>
+        </div>
+
+        <div class="card">
+          <h4 style="margin-bottom:14px;">Purchase Item</h4>
+          <div class="qty-stepper">
+            <button class="qty-btn" id="qtyMinus">−</button>
+            <span class="qty-val" id="qtyVal">1</span>
+            <button class="qty-btn" id="qtyPlus">+</button>
+          </div>
+          <button class="btn btn-primary btn-block" id="addToCartBtn" style="margin-bottom:10px;">Add to Cart</button>
+          <button class="btn btn-outline btn-block" id="buyNowBtn">Buy Now</button>
+
+          <div class="upload-dropzone" id="detailUploadPrompt" style="margin-top:16px;padding:16px;display:none;"
+            data-page="prescriptions">
+            <p class="small"><strong>Prescription Required!</strong><br>Click to upload your prescription or do it at
+              checkout.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="tab-nav">
+        <button class="tab-btn active" data-tab="desc">Uses &amp; Dosage</button>
+        <button class="tab-btn" data-tab="reviews">Reviews &amp; Ratings</button>
+      </div>
+
+      <div class="tab-panel active" id="tab-desc">
+        <div style="max-width:75ch;line-height:1.7;">
+          <h4 style="margin-bottom:8px;">Description</h4>
+          <p class="muted" id="detailDesc"></p>
+          <h4 style="margin:20px 0 8px;">Safety Information &amp; Side Effects</h4>
+          <ul style="padding-left:20px;color:var(--ink-muted);" class="small">
+            <li>Consult a registered medical practitioner before starting medication.</li>
+            <li>Do not exceed the recommended dosage given on the package.</li>
+            <li>Store in a cool, dry place away from direct sunlight.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="tab-panel" id="tab-reviews">
+        <div class="card" style="max-width:75ch;margin-bottom:24px;">
+          <h4 style="margin-bottom:12px;">Write a Customer Review</h4>
+          <div class="field"><label>Rating</label>
+            <select id="reviewRating" style="width:160px;">
+              <option value="5">★★★★★ 5 Stars</option>
+              <option value="4">★★★★☆ 4 Stars</option>
+              <option value="3">★★★☆☆ 3 Stars</option>
+            </select>
+          </div>
+          <div class="field"><label>Review Comments</label><textarea id="reviewText" rows="3"
+              placeholder="Share your experience with this product..."></textarea></div>
+          <button class="btn btn-primary btn-sm" id="submitReviewBtn">Submit Review</button>
+        </div>
+        <div id="reviewsList" style="max-width:75ch;"></div>
+      </div>
+
+      <div class="container" style="padding-top:20px;padding-bottom:60px;">
+        <h3>Related Medicines</h3>
+        <div class="med-grid" id="relatedRow" style="margin-top:16px;"></div>
+      </div>
+    </section>
+
+    <!-- ================= 4. PRESCRIPTIONS ================= -->
+    <section class="page" id="page-prescriptions">
+      <div class="page-head">
+        <h2>Prescription Management</h2>
+        <p>Upload doctor's prescriptions for quick verification by our licensed pharmacists.</p>
+      </div>
+
+      <div class="two-col">
+        <div class="card">
+          <h4 style="margin-bottom:16px;">Upload New Prescription</h4>
+          <input type="file" id="rxFileInput" accept="image/*,.pdf" style="display:none;">
+          <div class="upload-dropzone" id="rxUploadZone">
+            <svg viewBox="0 0 24 24">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+              <polyline points="17 8 12 3 7 8" />
+              <line x1="12" y1="3" x2="12" y2="15" />
+            </svg>
+            <p><b>Click to select file</b> or drag and drop<br><span class="small muted">Supports JPG, PNG, PDF up to
+                10MB</span></p>
+            <p id="rxFileName" class="small" style="margin-top:10px;color:var(--primary-700);font-weight:600;"></p>
+          </div>
+
+          <div class="field"><label>Patient Full Name</label><input id="rxPatient" placeholder="e.g. John Doe"></div>
+          <div class="field"><label>Prescribing Doctor Name</label><input id="rxDoctor"
+              placeholder="e.g. Dr. Kavya Suresh"></div>
+          <button class="btn btn-primary btn-block" id="rxSubmitBtn">Submit for Pharmacist Verification</button>
+        </div>
+
+        <div class="card" style="padding:0;overflow:hidden;">
+          <h4 style="padding:20px 20px 0;">Prescription History</h4>
+          <table style="margin-top:14px;">
+            <thead>
+              <tr>
+                <th>Submitted Date</th>
+                <th>Document</th>
+                <th>Status</th>
+                <th>Linked Order</th>
+              </tr>
+            </thead>
+            <tbody id="rxTableBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= 5. CART ================= -->
+    <section class="page" id="page-cart">
+      <div class="page-head">
+        <h2>Shopping Cart</h2>
+        <p>Review items in your cart before proceeding to checkout.</p>
+      </div>
+
+      <div class="two-col">
+        <div class="card" style="padding:0;overflow:hidden;">
+          <table>
+            <thead>
+              <tr>
+                <th>Medicine Item</th>
+                <th>Unit Price</th>
+                <th>Quantity</th>
+                <th>Subtotal</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody id="cartBody"></tbody>
+          </table>
+        </div>
+
+        <div class="card">
+          <h4 style="margin-bottom:14px;">Order Summary</h4>
+
+          <div class="field" style="margin-bottom:20px;">
+            <label>Promo / Coupon Code</label>
+            <div style="display:flex;gap:8px;">
+              <input id="couponInput" placeholder="Try HEALTH20" style="flex:1;">
+              <button class="btn btn-secondary btn-sm" id="applyCouponBtn">Apply</button>
+            </div>
+          </div>
+
+          <div class="summary-line"><span>Subtotal</span><span id="sumItems">₹0</span></div>
+          <div class="summary-line"><span>Estimated Delivery Fee</span><span id="sumDelivery">₹40</span></div>
+          <div class="summary-line"><span>Discount</span><span id="sumDiscount">−₹0</span></div>
+          <div class="summary-line total"><span>Grand Total</span><span id="sumTotal">₹0</span></div>
+
+          <button class="btn btn-primary btn-block" style="margin-top:20px;" id="checkoutBtn">Proceed to Checkout
+            →</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= 6. CHECKOUT ================= -->
+    <section class="page" id="page-checkout">
+      <div class="breadcrumb"><a data-page="cart">Cart</a> &gt; <b>Checkout Details</b></div>
+      <div class="page-head">
+        <h2>Order Checkout</h2>
+        <p>Provide delivery address and select payment option to finalize order.</p>
+      </div>
+
+      <div class="two-col">
+        <div class="card">
+          <h4 style="margin-bottom:16px;">Delivery Details</h4>
+          <div class="field"><label>Recipient Name</label><input id="chkName" value="John Doe"></div>
+          <div class="field"><label>Full Address</label><textarea id="chkAddress"
+              rows="3">44, Lotus Residency, MG Road, Kochi, Kerala 682016</textarea></div>
+          <div class="field"><label>Phone Number</label><input id="chkPhone" value="+91 98765 43210"></div>
+          <div class="field"><label>Preferred Delivery Slot</label>
+            <select id="chkSlot">
+              <option>Today Express Delivery (Within 2 Hours)</option>
+              <option>Tomorrow Morning (9 AM - 12 PM)</option>
+              <option>Tomorrow Evening (4 PM - 7 PM)</option>
+            </select>
+          </div>
+
+          <div class="badge badge-green" style="margin-bottom:20px;padding:8px 12px;">
+            <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" fill="none" stroke-width="2">
+              <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+              <polyline points="22 4 12 14.01 9 11.01" />
+            </svg>
+            Prescription verification active for selected items
+          </div>
+
+          <h4 style="margin-bottom:12px;">Payment Method</h4>
+          <div class="pay-grid" id="payOptions">
+            <div class="pay-box selected" data-pay="card">Credit / Debit Card</div>
+            <div class="pay-box" data-pay="upi">Instant UPI / QR</div>
+            <div class="pay-box" data-pay="cod">Cash on Delivery</div>
+          </div>
+        </div>
+
+        <div class="card">
+          <h4 style="margin-bottom:14px;">Order Summary</h4>
+          <div id="checkoutItems"></div>
+          <div class="divider"></div>
+          <div class="summary-line total"><span>Total Payable</span><span id="checkoutTotal">₹0</span></div>
+          <button class="btn btn-primary btn-block" style="margin-top:20px;" id="placeOrderBtn">Confirm &amp; Place
+            Order</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= 7. ORDERS ================= -->
+    <section class="page" id="page-orders">
+      <div class="page-head">
+        <h2>Order History &amp; Tracking</h2>
+        <p>Track delivery status of ongoing orders or review past transactions.</p>
+      </div>
+
+      <div class="two-col">
+        <div class="card" style="padding:0;overflow:hidden;">
+          <table>
+            <thead>
+              <tr>
+                <th>Order ID</th>
+                <th>Date</th>
+                <th>Total</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody id="ordersBody"></tbody>
+          </table>
+        </div>
+
+        <div class="card" id="orderDetailCard">
+          <h4 id="odId">Select an order from the list</h4>
+          <div class="tracker-row" id="odTracker"></div>
+          <div id="odItems"></div>
+          <button class="btn btn-outline btn-block" style="margin-top:16px;" id="downloadInvoiceBtn">Download Tax
+            Invoice (PDF)</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= 8. PROFILE ================= -->
+    <section class="page" id="page-profile">
+      <div class="page-head">
+        <h2>User Profile</h2>
+        <p>Manage your account settings, addresses, and saved prescription documents.</p>
+      </div>
+
+      <div class="two-col">
+        <div>
+          <div class="card" style="margin-bottom:24px;display:flex;gap:20px;align-items:center;">
+            <div
+              style="width:64px;height:64px;border-radius:50%;background:var(--primary-700);color:#fff;display:flex;align-items:center;justify-content:center;font-family:'Space Grotesk';font-size:24px;font-weight:700;"
+              id="userAvatar">JD</div>
+            <div>
+              <h3 id="profileNameDisplay">John Doe</h3>
+              <p class="muted small" id="profileEmailDisplay">john@example.com &nbsp;•&nbsp; +91 98765 43210</p>
+              <span class="badge badge-green" style="margin-top:6px;" id="profileRoleBadge">Customer Account (SQLite
+                DB)</span>
+            </div>
+          </div>
+
+          <h3 style="margin-bottom:14px;">Recent Orders</h3>
+          <div class="card" style="padding:0;overflow:hidden;margin-bottom:28px;">
+            <table>
+              <thead>
+                <tr>
+                  <th>Order ID</th>
+                  <th>Date</th>
+                  <th>Items</th>
+                  <th>Total</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody id="profileOrdersBody"></tbody>
+            </table>
+          </div>
+
+          <h3 style="margin-bottom:14px;">Saved Prescriptions</h3>
+          <div class="card" id="profileRxList"></div>
+        </div>
+
+        <div class="card">
+          <h4 style="margin-bottom:16px;">Account Info &amp; Shipping Address</h4>
+          <div class="field"><label>Full Name</label><input id="profInputName" value="John Doe"></div>
+          <div class="field"><label>Email Address</label><input id="profInputEmail" value="john@example.com" readonly
+              style="background:var(--surface-bg);"></div>
+          <div class="field"><label>Mobile Phone</label><input id="profInputPhone" value="+91 98765 43210"></div>
+          <div class="field"><label>Address Line</label><textarea id="profInputAddress"
+              rows="3">44, Lotus Residency, MG Road, Kochi, Kerala 682016</textarea></div>
+          <button class="btn btn-outline btn-block" id="saveProfileBtn">Save Changes</button>
+          <button class="btn btn-danger btn-block btn-sm" id="logoutBtn" style="margin-top:10px;">Sign Out</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= 9. ADMIN DASHBOARD ================= -->
+    <section class="page" id="page-admin">
+      <div class="page-head" style="padding-top:24px;">
+        <h2>Pharmacy Management Dashboard</h2>
+        <p>Real-time analytics for stock levels, expiring medicine batches, sales revenue, and separate User/Admin DB
+          tables.</p>
+      </div>
+
+      <div class="kpi-row">
+        <div class="kpi-card"><span>Total Sales (This Month)</span><b>₹48,950</b></div>
+        <div class="kpi-card"><span>Low Stock Items</span><b style="color:var(--amber-600);">4 Items</b></div>
+        <div class="kpi-card"><span>Expiring Soon (&lt; 30 days)</span><b style="color:var(--red-600);">2 Batches</b>
+        </div>
+        <div class="kpi-card"><span>Pending Rx Approvals</span><b style="color:var(--primary-700);">3 Prescriptions</b>
+        </div>
+      </div>
+
+      <!-- REGISTERED USERS & ADMINS SQLITE DB VIEW -->
+      <div class="container" style="padding-top:24px;">
+        <h3 style="margin-bottom:16px;">Registered Database Accounts (SQLite `users` &amp; `admins` Tables)</h3>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;">
+          <div class="card" style="padding:0;overflow:hidden;">
+            <h4 style="padding:16px 16px 8px;">Customer Accounts (`users` Table)</h4>
+            <table>
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Email</th>
+                  <th>Phone</th>
+                </tr>
+              </thead>
+              <tbody id="adminDbUsersBody"></tbody>
+            </table>
+          </div>
+          <div class="card" style="padding:0;overflow:hidden;">
+            <h4 style="padding:16px 16px 8px;">Pharmacist Admin Accounts (`admins` Table)</h4>
+            <table>
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Email</th>
+                  <th>Role</th>
+                </tr>
+              </thead>
+              <tbody id="adminDbAdminsBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <div class="container" style="padding-top:36px;">
+        <h3 style="margin-bottom:16px;">Sales &amp; Revenue Analytics (Monthly Trend)</h3>
+        <div class="card">
+          <div class="chart-container" id="salesChart"></div>
+        </div>
+      </div>
+
+      <div class="container" style="padding-top:36px;padding-bottom:60px;">
+        <h3 style="margin-bottom:16px;">Inventory &amp; Batch Expiry Tracking</h3>
+        <div class="card" style="padding:0;overflow:hidden;">
+          <table>
+            <thead>
+              <tr>
+                <th>Medicine Name</th>
+                <th>Batch Code</th>
+                <th>Stock Level</th>
+                <th>Expiry Date</th>
+                <th>Alert Status</th>
+              </tr>
+            </thead>
+            <tbody id="adminStockBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= 10. SUPPLIERS ================= -->
+    <section class="page" id="page-suppliers">
+      <div class="page-head" style="padding-top:24px;">
+        <h2>Supplier Management</h2>
+        <p>Manage pharmaceutical distributors, contact details, and supplied categories.</p>
+      </div>
+
+      <div class="two-col">
+        <div class="card">
+          <h4 style="margin-bottom:16px;" id="supplierFormTitle">Add New Supplier</h4>
+          <div class="field"><label>Company Name</label><input id="supName" placeholder="e.g. MedSupply Distributors">
+          </div>
+          <div class="field"><label>Contact Person</label><input id="supContact" placeholder="e.g. Suresh Nair"></div>
+          <div class="field"><label>Phone Number</label><input id="supPhone" placeholder="+91 98450 11223"></div>
+          <div class="field"><label>Email Address</label><input id="supEmail" placeholder="suresh@medsupply.in"></div>
+          <div class="field"><label>Supplied Categories</label><input id="supCats"
+              placeholder="e.g. Pain Relief, Antibiotics"></div>
+          <button class="btn btn-primary btn-block" id="supSaveBtn">Save Supplier Record</button>
+        </div>
+
+        <div class="card" style="padding:0;overflow:hidden;">
+          <h4 style="padding:20px 20px 0;">Active Suppliers List</h4>
+          <table style="margin-top:14px;">
+            <thead>
+              <tr>
+                <th>Supplier Name</th>
+                <th>Contact Person</th>
+                <th>Email</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody id="suppliersBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= 11. LOGIN / SIGNUP ================= -->
+    <section class="page" id="page-login">
+      <div class="auth-wrapper">
+        <div class="auth-box">
+          <div class="auth-tabs">
+            <button class="auth-tab active" data-auth="login">Sign In</button>
+            <button class="auth-tab" data-auth="signup">Customer Register</button>
+          </div>
+
+          <!-- LOGIN FORM -->
+          <div id="auth-login">
+            <div class="field"><label>Account Type</label>
+              <select id="loginTypeSelect">
+                <option value="auto">Auto Detect (User / Admin)</option>
+                <option value="user">Customer Login (users table)</option>
+                <option value="admin">Pharmacist Admin Login (admins table)</option>
+              </select>
+            </div>
+            <div class="field"><label>Email Address</label><input id="loginEmail" value="john@example.com"></div>
+            <div class="field"><label>Password</label><input type="password" id="loginPass" value="password123"></div>
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;"
+              class="small">
+              <label><input type="checkbox" checked> Remember me</label>
+              <a href="#" style="color:var(--primary-700);font-weight:600;">Forgot Password?</a>
+            </div>
+            <button class="btn btn-primary btn-block" id="loginSubmitBtn">Sign In to Database Account</button>
+
+            <div class="divider"></div>
+            <p class="small muted" style="text-align:center;margin-bottom:12px;">Quick Database Demo Logins:</p>
+            <div style="display:flex;gap:10px;">
+              <button class="btn btn-ghost btn-sm btn-block" id="demoCustomerBtn">Customer Login (users table)</button>
+              <button class="btn btn-ghost btn-sm btn-block" id="demoAdminBtn">Admin Login (admins table)</button>
+            </div>
+          </div>
+
+          <!-- SIGNUP FORM -->
+          <div id="auth-signup" style="display:none;">
+            <div class="field"><label>Full Name</label><input id="signupName" placeholder="e.g. John Doe"></div>
+            <div class="field"><label>Email Address</label><input id="signupEmail" placeholder="john@example.com"></div>
+            <div class="field"><label>Phone Number</label><input id="signupPhone" placeholder="+91 98765 43210"></div>
+            <div class="field"><label>Password</label><input type="password" id="signupPass"></div>
+            <div class="field"><label>Delivery Address</label><textarea id="signupAddress" rows="2"
+                placeholder="Street, City, Pincode..."></textarea></div>
+            <button class="btn btn-primary btn-block" id="signupSubmitBtn">Create Customer Account (SQLite)</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= 12. ABOUT ================= -->
+    <section class="page" id="page-about">
+      <div class="page-head">
+        <h2>About MediCart Pharmacy</h2>
+        <p>Your trusted local &amp; digital healthcare partner committed to genuine medicines and patient care.</p>
+      </div>
+
+      <div class="container" style="padding-top:16px;">
+        <div class="card" style="margin-bottom:32px;line-height:1.8;">
+          <h3 style="margin-bottom:12px;">Our Mission</h3>
+          <p class="muted">MediCart Pharmacy was established with a single vision: to ensure seamless, reliable access
+            to genuine pharmaceutical medicines and healthcare essentials. We bridge the gap between licensed
+            pharmacists and patients through real-time prescription verification, doorstep express delivery, and
+            automated inventory management.</p>
+        </div>
+      </div>
+
+      <div class="stats-grid">
+        <div class="stat-card"><b>3,500+</b><span>Medicines Catalogued</span></div>
+        <div class="stat-card"><b>1,200+</b><span>Rx Verified</span></div>
+        <div class="stat-card"><b>950+</b><span>Deliveries Completed</span></div>
+        <div class="stat-card"><b>2,500+</b><span>Happy Patients</span></div>
+      </div>
+
+      <div id="footerAbout"></div>
+    </section>
+
+    <!-- ================= 13. CONTACT ================= -->
+    <section class="page" id="page-contact">
+      <div class="page-head">
+        <h2>Contact Us</h2>
+        <p>Have questions about your order, prescriptions, or available medicines? We're here to help 24/7.</p>
+      </div>
+
+      <div class="two-col">
+        <div class="card">
+          <h4 style="margin-bottom:16px;">Send Us a Message</h4>
+          <div class="field"><label>Your Name</label><input id="contactName" placeholder="John Doe"></div>
+          <div class="field"><label>Email Address</label><input id="contactEmail" placeholder="john@example.com"></div>
+          <div class="field"><label>Subject</label><input id="contactSubject" placeholder="Inquiry about order...">
+          </div>
+          <div class="field"><label>Message</label><textarea id="contactMsg" rows="4"
+              placeholder="How can we assist you?"></textarea></div>
+          <button class="btn btn-primary" id="contactSubmitBtn">Send Message</button>
+        </div>
+
+        <div class="card">
+          <h4 style="margin-bottom:16px;">Contact Details &amp; Hours</h4>
+          <div style="display:flex;flex-direction:column;gap:16px;" class="small">
+            <div><strong style="display:block;margin-bottom:2px;">Store Location:</strong><span class="muted">44, MG
+                Road, Lotus Residency, Kochi, Kerala 682016</span></div>
+            <div><strong style="display:block;margin-bottom:2px;">Phone Support:</strong><span class="muted">+91 484 234
+                5678 / +91 98765 43210</span></div>
+            <div><strong style="display:block;margin-bottom:2px;">Email Inquiry:</strong><span
+                class="muted">support@medicart.example</span></div>
+            <div><strong style="display:block;margin-bottom:2px;">Working Hours:</strong><span class="muted">Monday –
+                Saturday: 8:00 AM – 10:00 PM<br>Sunday: Emergency Services Only</span></div>
+          </div>
+        </div>
+      </div>
+      <div id="footerContact"></div>
+    </section>
+
+  </main>
+
+  <script>
+    /* ================= DATA MODELS ================= */
+    const CATEGORIES = [
+      { key: 'pain', name: 'Pain Relief', count: 48, icon: 'M10 14a4 4 0 0 1 0-5.7l3-3a4 4 0 1 1 5.7 5.7l-1.5 1.5 M14 10a4 4 0 0 1 0 5.7l-3 3a4 4 0 1 1-5.7-5.7l1.5-1.5' },
+      { key: 'antibiotics', name: 'Antibiotics', count: 32, icon: 'M12 2l8 4v6c0 5-3.5 8-8 10-4.5-2-8-5-8-10V6l8-4z' },
+      { key: 'vitamins', name: 'Vitamins & Supplements', count: 84, icon: 'M12 21c-4-2-7-6-7-11a7 7 0 0 1 14 0c0 5-3 9-7 11z' },
+      { key: 'skincare', name: 'Skin Care', count: 65, icon: 'M12 3c3 3.5 6 7 6 10.5A6 6 0 0 1 6 13.5C6 10 9 6.5 12 3z' },
+      { key: 'babycare', name: 'Baby Care', count: 40, icon: 'M7 9h10v6a5 5 0 0 1-10 0V9zM9 9V7a3 3 0 0 1 6 0v2' },
+      { key: 'personalcare', name: 'Personal Hygiene', count: 92, icon: 'M20.8 4.6a5 5 0 0 0-7.1 0L12 6.3l-1.7-1.7a5 5 0 1 0-7.1 7.1L12 20.4l8.8-8.7a5 5 0 0 0 0-7.1z' }
+    ];
+
+    const MEDICINES = [];
+    const ADMIN_STOCK = [];
+    let suppliers = [];
+    let orders = [];
+    let prescriptions = [];
+    let dbUsers = [];
+    let dbAdmins = [];
+
+    let currentUser = null; // { name, email, phone, role, type: 'user' | 'admin' }
+    let orderSeq = 1089;
+    let cart = [];
+    let currentMedicineId = 1;
+    let currentQty = 1;
+    let currentOrderId = 'ORD-1042';
+    let selectedCategory = null;
+    let activePayMethod = 'card';
+    let discountAmount = 0;
+    let editingSupplierId = null;
+
+    /* ================= UTILITY FUNCTIONS ================= */
+    const $ = s => document.querySelector(s);
+    const $$ = s => document.querySelectorAll(s);
+    const inr = n => '₹' + n.toLocaleString('en-IN');
+    const medById = id => MEDICINES.find(m => m.id === id);
+
+    function toast(msg) {
+      const t = $('#toast');
+      $('#toastMsg').textContent = msg;
+      t.classList.add('show');
+      clearTimeout(window.__toastTimer);
+      window.__toastTimer = setTimeout(() => t.classList.remove('show'), 3000);
+    }
+
+    function iconSvg(path, w = 24) {
+      return `<svg viewBox="0 0 24 24" width="${w}" height="${w}" stroke="currentColor" fill="none" stroke-width="1.8"><path d="${path}"/></svg>`;
+    }
+
+    /* ================= THEME TOGGLE ================= */
+    $('#themeToggle').addEventListener('click', () => {
+      const cur = document.documentElement.getAttribute('data-theme');
+      const next = cur === 'dark' ? 'light' : 'dark';
+      document.documentElement.setAttribute('data-theme', next);
+      toast(`Switched to ${next} theme mode`);
+    });
+
+    /* ================= SPA ROUTER ================= */
+    function navigateTo(page) {
+      $$('.page').forEach(p => p.classList.remove('active'));
+      const target = $('#page-' + page);
+      if (target) target.classList.add('active');
+      window.scrollTo({ top: 0, behavior: 'instant' });
+
+      const isAdmin = (page === 'admin' || page === 'suppliers');
+      $('#customerNav').style.display = isAdmin ? 'none' : 'block';
+      $('#adminNav').style.display = isAdmin ? 'block' : 'none';
+
+      $$('#navLinks a').forEach(a => a.classList.toggle('active', a.dataset.page === page));
+
+      if (page === 'medicines') renderMedicines();
+      if (page === 'cart') renderCart();
+      if (page === 'checkout') renderCheckout();
+      if (page === 'orders') renderOrders();
+      if (page === 'profile') renderProfile();
+      if (page === 'admin') renderAdmin();
+      if (page === 'suppliers') renderSuppliers();
+      if (page === 'prescriptions') renderPrescriptions();
+    }
+
+    document.body.addEventListener('click', e => {
+      const link = e.target.closest('[data-page]');
+      if (link) {
+        e.preventDefault();
+        navigateTo(link.dataset.page);
+        $('#navLinks').classList.remove('open');
+      }
+    });
+    $('#menuToggle').addEventListener('click', () => $('#navLinks').classList.toggle('open'));
+
+    /* ================= LIVE SEARCH ================= */
+    $('#searchInput').addEventListener('input', (e) => {
+      const val = e.target.value.toLowerCase().trim();
+      const box = $('#searchSuggestions');
+      if (!val) { box.classList.remove('active'); return; }
+
+      const matches = MEDICINES.filter(m => m.name.toLowerCase().includes(val));
+      if (!matches.length) {
+        box.innerHTML = `<div class="search-item muted">No medicines found</div>`;
+      } else {
+        box.innerHTML = matches.map(m => `
+      <div class="search-item" data-open-med="${m.id}">
+        <span>${m.name}</span>
+        <strong>${inr(m.price)}</strong>
+      </div>
+    `).join('');
+      }
+      box.classList.add('active');
+    });
+
+    document.addEventListener('click', e => {
+      if (!e.target.closest('.search-container')) $('#searchSuggestions').classList.remove('active');
+    });
+
+    /* ================= FOOTER GENERATOR ================= */
+    function getFooterHTML() {
+      return `<footer class="footer">
+    <div class="footer-grid">
+      <div>
+        <h4 style="font-family:'Space Grotesk';font-size:18px;">MediCart Pharmacy</h4>
+        <p>Your certified online pharmacy delivering genuine prescription medicines, healthcare products, and pharmacist consultations directly to your door.</p>
+      </div>
+      <div>
+        <h4>Shop Categories</h4>
+        <a data-page="medicines">Pain Relief</a>
+        <a data-page="medicines">Antibiotics</a>
+        <a data-page="medicines">Vitamins &amp; Supplements</a>
+        <a data-page="medicines">Baby Care</a>
+      </div>
+      <div>
+        <h4>Quick Links</h4>
+        <a data-page="prescriptions">Upload Prescription</a>
+        <a data-page="orders">Track Order</a>
+        <a data-page="about">About Us</a>
+        <a data-page="contact">Contact Support</a>
+      </div>
+      <div>
+        <h4>Customer Support</h4>
+        <p>Call Us: +91 484 234 5678</p>
+        <p>Email: support@medicart.example</p>
+        <p>24/7 Licensed Pharmacist Assistance</p>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 MediCart Pharmacy Ltd. All rights reserved.</span>
+      <span>SQLite DB User &amp; Admin Auth Integration</span>
+    </div>
+  </footer>`;
+    }
+    $('#footerHome').innerHTML = getFooterHTML();
+    $('#footerAbout').innerHTML = getFooterHTML();
+    $('#footerContact').innerHTML = getFooterHTML();
+
+    /* ================= 1. HOME CATEGORIES ================= */
+    function renderHomeCategories() {
+      $('#homeCatGrid').innerHTML = CATEGORIES.map(c => `
+    <div class="cat-card" data-goto-cat="${c.key}">
+      <div class="cat-icon">${iconSvg(c.icon, 24)}</div>
+      <b>${c.name}</b>
+      <span>${c.count}+ Products</span>
+    </div>
+  `).join('');
+    }
+    document.body.addEventListener('click', e => {
+      const catCard = e.target.closest('[data-goto-cat]');
+      if (catCard) {
+        selectedCategory = catCard.dataset.gotoCat;
+        navigateTo('medicines');
+      }
+    });
+
+    /* ================= 2. MEDICINES CATALOGUE ================= */
+    function renderFilterCategories() {
+      $('#filterCategories').innerHTML = CATEGORIES.map(c => `
+    <label><input type="checkbox" class="catCheck" value="${c.key}" ${selectedCategory === c.key ? 'checked' : ''}> ${c.name}</label>
+  `).join('');
+    }
+
+    function getFilteredMedicines() {
+      const q = ($('#searchInput').value || '').toLowerCase().trim();
+      const checkedCats = [...$$('.catCheck:checked')].map(c => c.value);
+      const maxPrice = Number($('#priceRange').value);
+      const ratingOnly = $('#ratingFilter').checked;
+      const stockOnly = $('#stockFilter').checked;
+      const rxOnly = $('#rxFilter').checked;
+
+      let list = MEDICINES.filter(m => {
+        if (q && !m.name.toLowerCase().includes(q)) return false;
+        if (checkedCats.length && !checkedCats.includes(m.cat)) return false;
+        if (m.price > maxPrice) return false;
+        if (ratingOnly && m.rating < 4.5) return false;
+        if (stockOnly && m.stock <= 0) return false;
+        if (rxOnly && m.rx) return false;
+        return true;
+      });
+
+      const sort = $('#sortSelect').value;
+      if (sort === 'low') list.sort((a, b) => a.price - b.price);
+      else if (sort === 'high') list.sort((a, b) => b.price - a.price);
+      else if (sort === 'name') list.sort((a, b) => a.name.localeCompare(b.name));
+      else list.sort((a, b) => b.rating - a.rating);
+
+      return list;
+    }
+
+    function medCardHTML(m) {
+      const stockBadge = m.stock === 0
+        ? '<span class="badge badge-red">Out of Stock</span>'
+        : (m.stock < 20 ? '<span class="badge badge-amber">Low Stock</span>' : '<span class="badge badge-green">In Stock</span>');
+
+      const rxBadge = m.rx ? '<span class="badge badge-red" style="margin-left:auto;">Rx Required</span>' : '';
+
+      return `
+    <div class="med-card">
+      <div class="med-thumb">${iconSvg('M10.5 20.5L3.5 13.5a5 5 0 1 1 7-7l7 7a5 5 0 1 1-7 7z M8.5 8.5l7 7', 36)}</div>
+      <div style="display:flex;gap:6px;align-items:center;">
+        ${stockBadge} ${rxBadge}
+      </div>
+      <h4 data-open-med="${m.id}">${m.name}</h4>
+      <div class="med-rating">★ ${m.rating} <span>(${m.reviews} reviews)</span></div>
+      <div class="med-price-row">
+        <span class="med-price">${inr(m.price)}</span>
+        <button class="btn btn-primary btn-sm" data-quick-add="${m.id}" ${m.stock === 0 ? 'disabled style="opacity:.5;cursor:not-allowed;"' : ''}>Add to Cart</button>
+      </div>
+    </div>
+  `;
+    }
+
+    function renderMedicines() {
+      renderFilterCategories();
+      const list = getFilteredMedicines();
+      $('#medGrid').innerHTML = list.length ? list.map(medCardHTML).join('') : '<p class="muted">No medicines found matching selected filters.</p>';
+      $('#resultCount').textContent = `Showing ${list.length} medicine${list.length === 1 ? '' : 's'}`;
+    }
+
+    $('#priceRange').addEventListener('input', (e) => { $('#priceVal').textContent = e.target.value; renderMedicines(); });
+    $('#ratingFilter').addEventListener('change', renderMedicines);
+    $('#stockFilter').addEventListener('change', renderMedicines);
+    $('#rxFilter').addEventListener('change', renderMedicines);
+    $('#sortSelect').addEventListener('change', renderMedicines);
+    $('#clearFilters').addEventListener('click', () => {
+      selectedCategory = null;
+      $('#priceRange').value = 350; $('#priceVal').textContent = 350;
+      $('#ratingFilter').checked = false; $('#stockFilter').checked = false; $('#rxFilter').checked = false;
+      $('#searchInput').value = '';
+      renderMedicines();
+    });
+    document.body.addEventListener('change', e => { if (e.target.classList.contains('catCheck')) renderMedicines(); });
+
+    document.body.addEventListener('click', e => {
+      const openEl = e.target.closest('[data-open-med]');
+      if (openEl) { openDetail(Number(openEl.dataset.openMed)); return; }
+      const quickAdd = e.target.closest('[data-quick-add]');
+      if (quickAdd) { addToCart(Number(quickAdd.dataset.quickAdd), 1); }
+    });
+
+    /* ================= 3. MEDICINE DETAIL ================= */
+    function openDetail(id) {
+      currentMedicineId = id;
+      currentQty = 1;
+      const m = medById(id);
+      if (!m) return;
+
+      $('#crumbMedName').textContent = m.name;
+      $('#detailCatBadge').textContent = CATEGORIES.find(c => c.key === m.cat)?.name || m.cat;
+      $('#detailName').textContent = m.name;
+      $('#detailManufacturer').textContent = `Manufacturer: ${m.manufacturer}`;
+      $('#detailStock').textContent = `Status: ${m.stock === 0 ? 'Out of Stock' : (m.stock < 20 ? `Low Stock (Only ${m.stock} left)` : 'In Stock')}`;
+      $('#detailRating').textContent = `★ ${m.rating}`;
+      $('#detailReviewCount').textContent = `(${m.reviews} reviews)`;
+      $('#detailPrice').textContent = inr(m.price);
+      $('#detailRxBadge').style.display = m.rx ? 'inline-flex' : 'none';
+      $('#detailUploadPrompt').style.display = m.rx ? 'block' : 'none';
+      $('#detailDesc').textContent = m.desc;
+      $('#qtyVal').textContent = currentQty;
+
+      $('#reviewsList').innerHTML = `
+    <div class="card" style="margin-bottom:12px;">
+      <div style="display:flex;justify-content:space-between;font-weight:600;margin-bottom:4px;">
+        <span>Anjali Sharma</span><span style="color:var(--amber-600);">★★★★★ 5.0</span>
+      </div>
+      <p class="small muted">Fast delivery! Medicine was sealed properly and prescription verification was very quick.</p>
+    </div>
+    <div class="card">
+      <div style="display:flex;justify-content:space-between;font-weight:600;margin-bottom:4px;">
+        <span>Rahul Verma</span><span style="color:var(--amber-600);">★★★★☆ 4.0</span>
+      </div>
+      <p class="small muted">Genuine medicine at a reasonable price. Great packaging.</p>
+    </div>
+  `;
+
+      const related = MEDICINES.filter(x => x.cat === m.cat && x.id !== m.id).slice(0, 4);
+      $('#relatedRow').innerHTML = related.map(medCardHTML).join('');
+
+      navigateTo('detail');
+    }
+
+    $('#qtyMinus').addEventListener('click', () => { currentQty = Math.max(1, currentQty - 1); $('#qtyVal').textContent = currentQty; });
+    $('#qtyPlus').addEventListener('click', () => { currentQty += 1; $('#qtyVal').textContent = currentQty; });
+    $('#addToCartBtn').addEventListener('click', () => addToCart(currentMedicineId, currentQty));
+    $('#buyNowBtn').addEventListener('click', () => { addToCart(currentMedicineId, currentQty); navigateTo('cart'); });
+    $('#submitReviewBtn').addEventListener('click', () => {
+      const comments = $('#reviewText').value.trim();
+      if (!comments) { toast('Please write a review comment'); return; }
+      toast('Thank you! Your review has been submitted.');
+      $('#reviewText').value = '';
+    });
+
+    $$('.tab-btn').forEach(btn => btn.addEventListener('click', () => {
+      $$('.tab-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      $$('.tab-panel').forEach(p => p.classList.remove('active'));
+      $('#tab-' + btn.dataset.tab).classList.add('active');
+    }));
+
+    /* ================= 4. CART SYSTEM ================= */
+    function addToCart(id, qty) {
+      const existing = cart.find(c => c.id === id);
+      if (existing) existing.qty += qty;
+      else cart.push({ id, qty });
+      updateCartBadge();
+      toast('Item added to shopping cart');
+    }
+
+    function updateCartBadge() {
+      $('#cartCount').textContent = cart.reduce((sum, item) => sum + item.qty, 0);
+    }
+
+    function getCartSubtotal() {
+      return cart.reduce((sum, item) => sum + (medById(item.id)?.price || 0) * item.qty, 0);
+    }
+
+    function renderCart() {
+      if (!cart.length) {
+        $('#cartBody').innerHTML = `<tr><td colspan="5" style="text-align:center;padding:36px;" class="muted">Your shopping cart is currently empty. <a data-page="medicines" style="color:var(--primary-700);font-weight:600;">Browse Medicines →</a></td></tr>`;
+      } else {
+        $('#cartBody').innerHTML = cart.map(c => {
+          const m = medById(c.id);
+          if (!m) return '';
+          return `
+        <tr>
+          <td><strong>${m.name}</strong> ${m.rx ? '<span class="badge badge-red" style="font-size:10px;">Rx</span>' : ''}</td>
+          <td>${inr(m.price)}</td>
+          <td>
+            <div style="display:flex;align-items:center;gap:6px;">
+              <button class="qty-btn" data-cart-dec="${c.id}">−</button>
+              <span style="width:24px;text-align:center;font-weight:600;">${c.qty}</span>
+              <button class="qty-btn" data-cart-inc="${c.id}">+</button>
+            </div>
+          </td>
+          <td><strong>${inr(m.price * c.qty)}</strong></td>
+          <td><button class="btn btn-danger btn-sm" data-cart-remove="${c.id}">Remove</button></td>
+        </tr>
+      `;
+        }).join('');
+      }
+
+      const subtotal = getCartSubtotal();
+      const delivery = subtotal > 0 ? 40 : 0;
+      const grandTotal = Math.max(0, subtotal + delivery - discountAmount);
+
+      $('#sumItems').textContent = inr(subtotal);
+      $('#sumDelivery').textContent = inr(delivery);
+      $('#sumDiscount').textContent = `−${inr(discountAmount)}`;
+      $('#sumTotal').textContent = inr(grandTotal);
+    }
+
+    document.body.addEventListener('click', e => {
+      const inc = e.target.closest('[data-cart-inc]');
+      const dec = e.target.closest('[data-cart-dec]');
+      const rem = e.target.closest('[data-cart-remove]');
+
+      if (inc) { cart.find(c => c.id === Number(inc.dataset.cartInc)).qty++; updateCartBadge(); renderCart(); }
+      if (dec) {
+        const item = cart.find(c => c.id === Number(dec.dataset.cartDec));
+        item.qty = Math.max(1, item.qty - 1);
+        updateCartBadge(); renderCart();
+      }
+      if (rem) {
+        cart = cart.filter(c => c.id !== Number(rem.dataset.cartRemove));
+        updateCartBadge(); renderCart();
+      }
+    });
+
+    $('#applyCouponBtn').addEventListener('click', () => {
+      const code = $('#couponInput').value.trim().toUpperCase();
+      if (code === 'HEALTH20') {
+        discountAmount = Math.round(getCartSubtotal() * 0.20);
+        toast('Coupon HEALTH20 applied! 20% discount applied.');
+      } else {
+        toast('Invalid coupon code. Try HEALTH20');
+      }
+      renderCart();
+    });
+
+    $('#checkoutBtn').addEventListener('click', () => {
+      if (!cart.length) { toast('Your cart is empty. Add medicines first!'); return; }
+      navigateTo('checkout');
+    });
+
+    /* ================= 5. CHECKOUT & PAYMENT ================= */
+    function renderCheckout() {
+      if (currentUser) {
+        $('#chkName').value = currentUser.name;
+        if (currentUser.address) $('#chkAddress').value = currentUser.address;
+        if (currentUser.phone) $('#chkPhone').value = currentUser.phone;
+      }
+
+      $('#checkoutItems').innerHTML = cart.map(c => {
+        const m = medById(c.id);
+        return `<div class="summary-line"><span>${m?.name || 'Item'} × ${c.qty}</span><span>${inr((m?.price || 0) * c.qty)}</span></div>`;
+      }).join('');
+
+      const subtotal = getCartSubtotal();
+      const total = Math.max(0, subtotal + 40 - discountAmount);
+      $('#checkoutTotal').textContent = inr(total);
+    }
+
+    $$('.pay-box').forEach(box => box.addEventListener('click', () => {
+      $$('.pay-box').forEach(b => b.classList.remove('selected'));
+      box.classList.add('selected');
+      activePayMethod = box.dataset.pay;
+    }));
+
+    $('#placeOrderBtn').addEventListener('click', async () => {
+      if (!cart.length) { toast('Your cart is empty'); return; }
+
+      const id = 'ORD-' + (orderSeq++);
+      const total = Math.max(0, getCartSubtotal() + 40 - discountAmount);
+
+      const orderRecord = {
+        id,
+        date: new Date().toISOString().slice(0, 10),
+        items: cart.map(c => ({ id: c.id, qty: c.qty })),
+        total,
+        status: 'Placed'
+      };
+
+      try {
+        await fetch('/api/orders', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(orderRecord)
+        });
+      } catch (e) { console.log(e); }
+
+      orders.unshift(orderRecord);
+      cart = [];
+      discountAmount = 0;
+      updateCartBadge();
+      currentOrderId = id;
+
+      toast(`Order #${id} placed successfully!`);
+      navigateTo('orders');
+    });
+
+    /* ================= 6. ORDERS & INVOICE ================= */
+    const ORDER_STEPS = ['Placed', 'Packed', 'Shipped', 'Delivered'];
+
+    function renderOrders() {
+      $('#ordersBody').innerHTML = orders.map(o => `
+    <tr data-select-order="${o.id}" style="cursor:pointer;">
+      <td><strong>${o.id}</strong></td>
+      <td>${o.date}</td>
+      <td>${inr(o.total)}</td>
+      <td><span class="badge badge-green">${o.status}</span></td>
+    </tr>
+  `).join('');
+
+      if (!currentOrderId && orders.length) currentOrderId = orders[0].id;
+      renderOrderDetail();
+    }
+
+    function renderOrderDetail() {
+      const o = orders.find(x => x.id === currentOrderId);
+      if (!o) {
+        $('#odId').textContent = 'No active order selected';
+        $('#odTracker').innerHTML = '';
+        $('#odItems').innerHTML = '';
+        return;
+      }
+
+      $('#odId').textContent = `Order ${o.id} (${o.date})`;
+      const currentIdx = ORDER_STEPS.indexOf(o.status);
+
+      $('#odTracker').innerHTML = ORDER_STEPS.map((s, i) => `
+    <div class="tracker-step ${i <= currentIdx ? 'done' : ''}">
+      <div class="step-line"></div>
+      <div class="step-dot">${i <= currentIdx ? '✓' : i + 1}</div>
+      <span>${s}</span>
+    </div>
+  `).join('');
+
+      $('#odItems').innerHTML = `
+    <div class="divider"></div>
+    ${o.items.map(it => {
+        const m = medById(it.id);
+        return `<div class="summary-line"><span>${m?.name || 'Medicine'} × ${it.qty}</span><span>${inr((m?.price || 0) * it.qty)}</span></div>`;
+      }).join('')}
+    <div class="summary-line total"><span>Order Total</span><span>${inr(o.total)}</span></div>
+  `;
+    }
+
+    document.body.addEventListener('click', e => {
+      const row = e.target.closest('[data-select-order]');
+      if (row) { currentOrderId = row.dataset.selectOrder; renderOrderDetail(); }
+    });
+
+    $('#downloadInvoiceBtn').addEventListener('click', () => {
+      const o = orders.find(x => x.id === currentOrderId);
+      if (!o) return;
+
+      const content = `
+    <div style="padding:10px;">
+      <h3 style="color:var(--primary-700);margin-bottom:4px;">TAX INVOICE — MediCart Pharmacy</h3>
+      <p class="small muted">Invoice ID: INV-${o.id} | Date: ${o.date}</p>
+      <div class="divider"></div>
+      <p class="small"><strong>Billed To:</strong> ${currentUser ? currentUser.name : 'John Doe'}<br>${currentUser?.address || '44, Lotus Residency, MG Road, Kochi, Kerala'}</p>
+      <div class="divider"></div>
+      <table>
+        <thead><tr><th>Item Description</th><th>Qty</th><th>Amount</th></tr></thead>
+        <tbody>
+          ${o.items.map(it => {
+        const m = medById(it.id);
+        return `<tr><td>${m?.name || 'Item'}</td><td>${it.qty}</td><td>${inr((m?.price || 0) * it.qty)}</td></tr>`;
+      }).join('')}
+        </tbody>
+      </table>
+      <div class="summary-line total"><span>Total Paid</span><span>${inr(o.total)}</span></div>
+      <div style="margin-top:20px;text-align:right;">
+        <button class="btn btn-primary btn-sm" onclick="$('#appModal').classList.remove('active')">Close &amp; Print</button>
+      </div>
+    </div>
+  `;
+      $('#modalContent').innerHTML = content;
+      $('#appModal').classList.add('active');
+    });
+
+    /* ================= 7. PRESCRIPTION UPLOAD ================= */
+    $('#rxUploadZone').addEventListener('click', () => $('#rxFileInput').click());
+    $('#rxFileInput').addEventListener('change', (e) => {
+      if (e.target.files.length) {
+        $('#rxFileName').textContent = `Attached: ${e.target.files[0].name}`;
+      }
+    });
+
+    $('#rxSubmitBtn').addEventListener('click', async () => {
+      const patient = $('#rxPatient').value.trim();
+      const doctor = $('#rxDoctor').value.trim();
+      if (!patient || !doctor) { toast('Please fill in Patient and Doctor names.'); return; }
+
+      const rxRecord = {
+        file: $('#rxFileInput').files[0]?.name || 'prescription_scanned.pdf',
+        patient, doctor,
+        date: new Date().toISOString().slice(0, 10),
+        status: 'Pending',
+        order: 'Unlinked'
+      };
+
+      try {
+        await fetch('/api/prescriptions', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(rxRecord)
+        });
+      } catch (e) { console.log(e); }
+
+      prescriptions.unshift(rxRecord);
+      $('#rxPatient').value = ''; $('#rxDoctor').value = ''; $('#rxFileName').textContent = '';
+      toast('Prescription submitted for pharmacist verification.');
+      renderPrescriptions();
+    });
+
+    function renderPrescriptions() {
+      $('#rxTableBody').innerHTML = prescriptions.map(p => {
+        const badge = p.status === 'Verified' ? 'badge-green' : (p.status === 'Rejected' ? 'badge-red' : 'badge-amber');
+        return `
+      <tr>
+        <td>${p.date}</td>
+        <td><strong>${p.file}</strong></td>
+        <td><span class="badge ${badge}">${p.status}</span></td>
+        <td>${p.order}</td>
+      </tr>
+    `;
+      }).join('');
+    }
+
+    /* ================= 8. PROFILE & AUTH STATE ================= */
+    function renderProfile() {
+      if (currentUser) {
+        $('#profileNameDisplay').textContent = currentUser.name;
+        $('#profileEmailDisplay').textContent = `${currentUser.email} • ${currentUser.phone || ''}`;
+        $('#userAvatar').textContent = currentUser.name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
+        $('#profInputName').value = currentUser.name;
+        $('#profInputEmail').value = currentUser.email;
+        $('#profInputPhone').value = currentUser.phone || '';
+        if (currentUser.address) $('#profInputAddress').value = currentUser.address;
+        $('#profileRoleBadge').textContent = currentUser.type === 'admin' ? `Admin Pharmacist (${currentUser.role || 'Staff'})` : 'Customer Account (SQLite DB)';
+      }
+
+      $('#profileOrdersBody').innerHTML = orders.map(o => `
+    <tr>
+      <td><strong>${o.id}</strong></td>
+      <td>${o.date}</td>
+      <td>${o.items.length} item(s)</td>
+      <td>${inr(o.total)}</td>
+      <td><button class="btn btn-ghost btn-sm" data-view-order="${o.id}">View</button></td>
+    </tr>
+  `).join('');
+
+      $('#profileRxList').innerHTML = prescriptions.map(p => `
+    <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--line-border);">
+      <div>
+        <strong>${p.file}</strong>
+        <p class="small muted">Doctor: ${p.doctor} | Patient: ${p.patient}</p>
+      </div>
+      <span class="badge ${p.status === 'Verified' ? 'badge-green' : 'badge-amber'}">${p.status}</span>
+    </div>
+  `).join('');
+    }
+
+    document.body.addEventListener('click', e => {
+      const v = e.target.closest('[data-view-order]');
+      if (v) { currentOrderId = v.dataset.viewOrder; navigateTo('orders'); }
+    });
+    $('#saveProfileBtn').addEventListener('click', () => toast('Profile & Shipping Address updated in session.'));
+    $('#logoutBtn').addEventListener('click', () => {
+      currentUser = null;
+      $('#accountBtn').textContent = 'Login';
+      $('#accountBtn').dataset.page = 'login';
+      toast('You have been signed out.');
+      navigateTo('login');
+    });
+
+    /* ================= 9. ADMIN DASHBOARD ================= */
+    function renderAdmin() {
+      if (currentUser && currentUser.type === 'admin') {
+        $('#adminNameBadge').textContent = `Logged in: ${currentUser.name}`;
+      }
+
+      $('#adminStockBody').innerHTML = ADMIN_STOCK.map(s => {
+        let badge = '<span class="badge badge-green">Optimal</span>';
+        if (s.status === 'low') badge = '<span class="badge badge-amber">Low Stock Alert</span>';
+        if (s.status === 'expiring') badge = '<span class="badge badge-red">Expiring Soon</span>';
+        if (s.status === 'out') badge = '<span class="badge badge-red">Stock Out</span>';
+
+        return `
+      <tr>
+        <td><strong>${s.name}</strong></td>
+        <td><code>${s.batch}</code></td>
+        <td>${s.stock} units</td>
+        <td>${s.expiry}</td>
+        <td>${badge}</td>
+      </tr>
+    `;
+      }).join('');
+
+      // Render Registered DB Users
+      $('#adminDbUsersBody').innerHTML = dbUsers.map(u => `
+    <tr>
+      <td><strong>${u.name}</strong></td>
+      <td>${u.email}</td>
+      <td>${u.phone || 'N/A'}</td>
+    </tr>
+  `).join('') || '<tr><td colspan="3" class="muted">No user accounts found</td></tr>';
+
+      // Render Registered DB Admins
+      $('#adminDbAdminsBody').innerHTML = dbAdmins.map(a => `
+    <tr>
+      <td><strong>${a.name}</strong></td>
+      <td>${a.email}</td>
+      <td><span class="badge badge-green">${a.role}</span></td>
+    </tr>
+  `).join('') || '<tr><td colspan="3" class="muted">No admin accounts found</td></tr>';
+
+      const months = [['Mar', 28000], ['Apr', 34000], ['May', 31000], ['Jun', 42000], ['Jul', 38000], ['Aug', 48950]];
+      const max = 50000;
+      $('#salesChart').innerHTML = months.map(([m, val]) => `
+    <div class="bar-column">
+      <div class="bar-fill" style="height:${(val / max) * 100}%;"><span class="bar-val">₹${Math.round(val / 1000)}k</span></div>
+      <span class="small muted">${m}</span>
+    </div>
+  `).join('');
+    }
+
+    /* ================= 10. SUPPLIERS ================= */
+    function renderSuppliers() {
+      $('#suppliersBody').innerHTML = suppliers.map(s => `
+    <tr>
+      <td><strong>${s.name}</strong></td>
+      <td>${s.contact}</td>
+      <td>${s.email}</td>
+      <td>
+        <button class="btn btn-ghost btn-sm" data-edit-sup="${s.id}">Edit</button>
+        <button class="btn btn-danger btn-sm" data-del-sup="${s.id}">Delete</button>
+      </td>
+    </tr>
+  `).join('');
+    }
+
+    $('#supSaveBtn').addEventListener('click', async () => {
+      const name = $('#supName').value.trim();
+      if (!name) { toast('Supplier name is required'); return; }
+
+      const record = {
+        name,
+        contact: $('#supContact').value.trim(),
+        phone: $('#supPhone').value.trim(),
+        email: $('#supEmail').value.trim(),
+        cats: $('#supCats').value.trim(),
+        id: editingSupplierId
+      };
+
+      try {
+        await fetch('/api/suppliers', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(record)
+        });
+      } catch (e) { console.log(e); }
+
+      if (editingSupplierId) {
+        const s = suppliers.find(x => x.id === editingSupplierId);
+        if (s) Object.assign(s, record);
+        toast('Supplier details updated in SQLite DB');
+        editingSupplierId = null;
+        $('#supplierFormTitle').textContent = 'Add New Supplier';
+      } else {
+        suppliers.push({ id: Date.now(), ...record });
+        toast('New supplier registered in SQLite DB');
+      }
+
+      ['supName', 'supContact', 'supPhone', 'supEmail', 'supCats'].forEach(id => $('#' + id).value = '');
+      renderSuppliers();
+    });
+
+    document.body.addEventListener('click', async e => {
+      const edit = e.target.closest('[data-edit-sup]');
+      const del = e.target.closest('[data-del-sup]');
+
+      if (edit) {
+        const s = suppliers.find(x => x.id === Number(edit.dataset.editSup));
+        if (!s) return;
+        editingSupplierId = s.id;
+        $('#supName').value = s.name; $('#supContact').value = s.contact;
+        $('#supPhone').value = s.phone; $('#supEmail').value = s.email; $('#supCats').value = s.cats;
+        $('#supplierFormTitle').textContent = 'Edit Supplier Record';
+      }
+      if (del) {
+        const id = Number(del.dataset.delSup);
+        try { await fetch(`/api/suppliers/${id}`, { method: 'DELETE' }); } catch (err) { }
+        suppliers = suppliers.filter(x => x.id !== id);
+        toast('Supplier record removed from SQLite DB');
+        renderSuppliers();
+      }
+    });
+
+    /* ================= 11. AUTHENTICATION & DATABASE LOGIN ================= */
+    $$('.auth-tab').forEach(tab => tab.addEventListener('click', () => {
+      $$('.auth-tab').forEach(t => t.classList.remove('active'));
+      tab.classList.add('active');
+      const type = tab.dataset.auth;
+      $('#auth-login').style.display = type === 'login' ? 'block' : 'none';
+      $('#auth-signup').style.display = type === 'signup' ? 'block' : 'none';
+    }));
+
+    // Submit Login
+    $('#loginSubmitBtn').addEventListener('click', async () => {
+      const email = $('#loginEmail').value.trim();
+      const password = $('#loginPass').value.trim();
+      const type = $('#loginTypeSelect').value;
+
+      if (!email || !password) { toast('Please enter both email and password.'); return; }
+
+      try {
+        const res = await fetch('/api/auth/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, password, type })
+        });
+        const resData = await res.json();
+
+        if (res.ok && resData.success) {
+          currentUser = { ...resData.user, type: resData.type };
+          $('#accountBtn').textContent = currentUser.name;
+          $('#accountBtn').dataset.page = 'profile';
+          toast(`Signed in as ${currentUser.name} (${resData.type === 'admin' ? 'Admin' : 'Customer'})`);
+
+          if (resData.type === 'admin') navigateTo('admin');
+          else navigateTo('profile');
+        } else {
+          toast(resData.message || 'Invalid login credentials.');
+        }
+      } catch (err) {
+        toast('Error connecting to authentication server.');
+      }
+    });
+
+    // Submit Signup
+    $('#signupSubmitBtn').addEventListener('click', async () => {
+      const name = $('#signupName').value.trim();
+      const email = $('#signupEmail').value.trim();
+      const phone = $('#signupPhone').value.trim();
+      const password = $('#signupPass').value.trim();
+      const address = $('#signupAddress').value.trim();
+
+      if (!name || !email || !password) { toast('Name, email, and password are required.'); return; }
+
+      try {
+        const res = await fetch('/api/auth/signup', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name, email, phone, password, address })
+        });
+        const resData = await res.json();
+
+        if (res.ok && resData.success) {
+          toast(resData.message);
+          $('#loginEmail').value = email;
+          $('#loginPass').value = password;
+          $$('.auth-tab[data-auth="login"]')[0].click();
+        } else {
+          toast(resData.message || 'Registration failed.');
+        }
+      } catch (err) {
+        toast('Error connecting to registration server.');
+      }
+    });
+
+    // Quick Demo Buttons
+    $('#demoCustomerBtn').addEventListener('click', () => {
+      $('#loginEmail').value = 'john@example.com';
+      $('#loginPass').value = 'password123';
+      $('#loginTypeSelect').value = 'user';
+      $('#loginSubmitBtn').click();
+    });
+
+    $('#demoAdminBtn').addEventListener('click', () => {
+      $('#loginEmail').value = 'admin@medicart.com';
+      $('#loginPass').value = 'admin123';
+      $('#loginTypeSelect').value = 'admin';
+      $('#loginSubmitBtn').click();
+    });
+
+    /* ================= 12. CONTACT ================= */
+    $('#contactSubmitBtn').addEventListener('click', () => {
+      toast('Your message has been sent to our customer care team.');
+      ['contactName', 'contactEmail', 'contactSubject', 'contactMsg'].forEach(id => $('#' + id).value = '');
+    });
+
+    /* ================= API BACKEND SYNC ================= */
+    async function syncWithBackend() {
+      try {
+        const medRes = await fetch('/api/medicines');
+        if (medRes.ok) {
+          const data = await medRes.json();
+          if (data && data.length) { MEDICINES.length = 0; MEDICINES.push(...data); }
+        }
+        const supRes = await fetch('/api/suppliers');
+        if (supRes.ok) {
+          const data = await supRes.json();
+          if (data && data.length) { suppliers.length = 0; suppliers.push(...data); }
+        }
+        const ordRes = await fetch('/api/orders');
+        if (ordRes.ok) {
+          const data = await ordRes.json();
+          if (data && data.length) { orders.length = 0; orders.push(...data); }
+        }
+        const rxRes = await fetch('/api/prescriptions');
+        if (rxRes.ok) {
+          const data = await rxRes.json();
+          if (data && data.length) { prescriptions.length = 0; prescriptions.push(...data); }
+        }
+        const stockRes = await fetch('/api/admin/stock');
+        if (stockRes.ok) {
+          const data = await stockRes.json();
+          if (data && data.length) { ADMIN_STOCK.length = 0; ADMIN_STOCK.push(...data); }
+        }
+        const userRes = await fetch('/api/users');
+        if (userRes.ok) {
+          const data = await userRes.json();
+          if (data && data.length) { dbUsers.length = 0; dbUsers.push(...data); }
+        }
+        const adminRes = await fetch('/api/admins');
+        if (adminRes.ok) {
+          const data = await adminRes.json();
+          if (data && data.length) { dbAdmins.length = 0; dbAdmins.push(...data); }
+        }
+      } catch (e) { console.log('Running in client-only mode'); }
+    }
+
+    /* ================= INIT ================= */
+    syncWithBackend().then(() => {
+      renderHomeCategories();
+      updateCartBadge();
+      if ($('#page-medicines').classList.contains('active')) renderMedicines();
+    });
+    navigateTo('home');
+  </script>
+</body>
+
+</html>
