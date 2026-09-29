@@ -403,26 +403,55 @@ INSERT INTO suppliers (id, name, contact_person, phone, email, categories, addre
 -- IDs 9-10:  Category 5 (Baby Care)
 -- IDs 11-12: Category 6 (Personal Hygiene)
 INSERT INTO medicines (id, name, category_id, price, rating, reviews, stock, rx_required, manufacturer, description) VALUES
-(1,  'Paracetamol 500mg',               1,  45.0, 4.8, 120, 240, 0, 'Apex Health',      'Relieves mild to moderate pain including headache, toothache, muscular ache, and feverish conditions.'),
-(2,  'Ibuprofen 400mg',                 1,  60.0, 4.7,  98, 180, 0, 'Abbott Healthcare','Fast-acting non-steroidal anti-inflammatory drug (NSAID) for joint aches, arthritis, and fever.'),
-(3,  'Amoxicillin 250mg',               2, 120.0, 4.6,  88,  60, 1, 'Sun Pharma',       'Broad-spectrum penicillin-class antibiotic for acute bacterial infections of ear, throat, and chest.'),
-(4,  'Azithromycin 500mg (3 Tabs)',     2, 150.0, 4.5,  41,   0, 1, 'Cipla Ltd',        'Macrolide antibiotic used for respiratory tract infections and strep throat. Requires valid Rx.'),
-(5,  'Vitamin C 1000mg Effervescent',   3, 180.0, 4.9, 210, 150, 0, 'Redoxon Labs',     'Immune support tablets enriched with Zinc and Antioxidants for daily stamina and vitality.'),
-(6,  'Adult Multivitamin Gummies',      3, 220.0, 4.8, 134,  75, 0, 'NutraLife',        'Delicious fruit-flavored chewable gummies packed with Vitamin B-complex, D3, and Iron.'),
-(7,  'Soothing Aloe Vera Gel 200ml',    4, 210.0, 4.5,  64,  90, 0, 'Nature Care',      '100% organic hydrating cooling gel for sunburns, minor cuts, skin irritation, and dryness.'),
-(8,  'Moisturizing Sunscreen SPF 50',   4, 280.0, 4.7,  82, 120, 0, 'DermaShield',      'Broad-spectrum UVA/UVB protection enriched with Vitamin E and soothing Chamomile extract.'),
-(9,  'Baby Colic Relief Drops 30ml',    5, 160.0, 4.4,  52,  40, 0, 'Himalaya Baby',    'Ayurvedic and pediatric formula designed to quickly soothe infantile colic, spasm, and gas.'),
-(10, 'Zinc Oxide Diaper Rash Cream 50g',5, 140.0, 4.6,  59,  55, 0, 'Sebamed Baby',     'Gentle hypoallergenic protective barrier cream with panthenol for delicate baby skin.'),
-(11, 'Antibacterial Hand Wash 250ml',   6,  95.0, 4.3,  73, 200, 0, 'Dettol Herbal',    'Enriched with Neem and Tulsi extracts, scientifically tested to eliminate 99.9% of harmful germs.'),
-(12, 'Antiseptic Disinfectant 500ml',   6, 175.0, 4.6,  91,  15, 0, 'LifeGuard Care',   'First-aid antiseptic liquid for wound cleansing, surface disinfection, and personal hygiene.');
+-- Category 1: Pain Relief (IDs 1, 2, 13, 14, 25, 26)
+(1,  'Paracetamol 500mg',                   1,  45.0, 4.8, 120, 240, 0, 'Apex Health',       'Relieves mild to moderate pain including headache, toothache, muscular ache, and feverish conditions.'),
+(2,  'Ibuprofen 400mg',                     1,  60.0, 4.7,  98, 180, 0, 'Abbott Healthcare', 'Fast-acting non-steroidal anti-inflammatory drug (NSAID) for joint aches, arthritis, and fever.'),
+(13, 'Diclofenac Sodium Gel 30g',           1,  85.0, 4.7, 115,  95, 0, 'Novartis Health',   'Targeted topical analgesic gel for instant joint pain, sprains, sports injuries, and muscular stiffness.'),
+(14, 'Cetirizine 10mg Tablets (10s)',       1,  35.0, 4.6, 140, 160, 0, 'Cipla Ltd',         'Non-drowsy antihistamine for quick allergy relief, runny nose, sneezing, and watery itchy eyes.'),
+(25, 'Dolo 650mg Paracetamol Tablets (15s)',1,  32.0, 4.9, 340, 220, 0, 'Micro Labs',        'Trusted paracetamol formulation recommended for high fever, severe headache, body ache, and viral flu.'),
+(26, 'Combiflam Tablets (20s)',             1,  54.0, 4.7, 185, 175, 0, 'Sanofi India',      'Dual-action Ibuprofen and Paracetamol combination for rapid toothache, backache, and muscular pain relief.'),
+-- Category 2: Antibiotics & Prescription (IDs 3, 4, 15, 16, 27, 28)
+(3,  'Amoxicillin 250mg',                   2, 120.0, 4.6,  88,  60, 1, 'Sun Pharma',        'Broad-spectrum penicillin-class antibiotic for acute bacterial infections of ear, throat, and chest.'),
+(4,  'Azithromycin 500mg (3 Tabs)',         2, 150.0, 4.5,  41,  40, 1, 'Cipla Ltd',         'Macrolide antibiotic used for respiratory tract infections and strep throat. Requires valid Rx.'),
+(15, 'Ciprofloxacin 500mg (10 Tabs)',       2, 115.0, 4.5,  76,  80, 1, 'Ranbaxy Labs',      'Fluoroquinolone antibiotic for urinary tract, gastrointestinal, and bacterial skin infections.'),
+(16, 'Augmentin 625mg Duo (6 Tabs)',        2, 210.0, 4.8, 125,  65, 1, 'GSK Pharma',        'Potent combination of Amoxicillin and Clavulanic Acid to combat resistant respiratory bacterial strains.'),
+(27, 'Taxim-O 200mg Tablets (10s)',         2, 175.0, 4.6,  92,  55, 1, 'Alkem Laboratories', 'Third-generation oral cephalosporin antibiotic for typhoid fever, bronchitis, and ENT infections.'),
+(28, 'Pantocid 40mg Gastro-Resistant (15s)',2, 145.0, 4.8, 210, 130, 0, 'Sun Pharma',        'Proton-pump inhibitor for lasting relief from acid reflux, peptic ulcers, heartburn, and gastritis.'),
+-- Category 3: Vitamins & Supplements (IDs 5, 6, 17, 18, 29, 30)
+(5,  'Vitamin C 1000mg Effervescent',       3, 180.0, 4.9, 210, 150, 0, 'Redoxon Labs',      'Immune support tablets enriched with Zinc and Antioxidants for daily stamina and vitality.'),
+(6,  'Adult Multivitamin Gummies',          3, 220.0, 4.8, 134,  75, 0, 'NutraLife',         'Delicious fruit-flavored chewable gummies packed with Vitamin B-complex, D3, and Iron.'),
+(17, 'Omega-3 Fish Oil 1000mg (60s)',       3, 320.0, 4.8, 160, 110, 0, 'TrueBasics',       'Triple-strength EPA & DHA fatty acids supporting cardiovascular vitality, brain function, and joint health.'),
+(18, 'Vitamin D3 60K IU Capsules (4s)',     3, 130.0, 4.9, 240, 140, 0, 'Sun Pharma',        'High-potency cholecalciferol weekly dosage for correcting vitamin D deficiency and strengthening bones.'),
+(29, 'Becosules Z B-Complex Capsules (20s)',3,  55.0, 4.8, 290, 210, 0, 'Pfizer Ltd',        'Essential therapeutic B-complex formula with Vitamin C and Zinc to treat mouth ulcers and fatigue.'),
+(30, 'Shelcal 500 Calcium + D3 (15s)',      3, 135.0, 4.9, 310, 165, 0, 'Torrent Pharma',    'Bio-available calcium with vitamin D3 ensuring optimal bone mineral density and healthy joint cartilage.'),
+-- Category 4: Skin Care (IDs 7, 8, 19, 20, 31, 32)
+(7,  'Soothing Aloe Vera Gel 200ml',        4, 210.0, 4.5,  64,  90, 0, 'Nature Care',       '100% organic hydrating cooling gel for sunburns, minor cuts, skin irritation, and dryness.'),
+(8,  'Moisturizing Sunscreen SPF 50',       4, 280.0, 4.7,  82, 120, 0, 'DermaShield',       'Broad-spectrum UVA/UVB protection enriched with Vitamin E and soothing Chamomile extract.'),
+(19, 'Salicylic Acid 2% Serum 30ml',        4, 299.0, 4.6, 110,  75, 0, 'DermaCo',           'Exfoliating clarifying serum that penetrates pores to clear blackheads and prevent acne blemishes.'),
+(20, 'Ceramide Moisturizing Cream 100g',    4, 260.0, 4.8, 145,  90, 0, 'Cetaphil Care',     'Intensive barrier-repair moisturizing cream providing 48-hour continuous hydration for sensitive skin.'),
+(31, 'Betadine 5% Antiseptic Ointment 20g', 4,  75.0, 4.7, 145, 150, 0, 'Win-Medicare',      'Povidone-iodine microbicidal topical ointment for wound care, minor burn dressing, and laceration healing.'),
+(32, 'Boroline Antiseptic Ayurvedic Cream', 4,  48.0, 4.8, 260, 180, 0, 'GD Pharmaceuticals', 'Heritage natural antiseptic boric-zinc ointment for chapped lips, cracked heels, dry skin, and cuts.'),
+-- Category 5: Baby Care (IDs 9, 10, 21, 22, 33, 34)
+(9,  'Baby Colic Relief Drops 30ml',        5, 160.0, 4.4,  52,  40, 0, 'Himalaya Baby',     'Ayurvedic and pediatric formula designed to quickly soothe infantile colic, spasm, and gas.'),
+(10, 'Zinc Oxide Diaper Rash Cream 50g',    5, 140.0, 4.6,  59,  55, 0, 'Sebamed Baby',      'Gentle hypoallergenic protective barrier cream with panthenol for delicate baby skin.'),
+(21, 'Gentle Tear-Free Baby Shampoo 200ml', 5, 175.0, 4.7,  88,  85, 0, 'Johnsons Baby',     'Ophthalmologist-tested ultra-mild no-tears shampoo that cleanses fine infant hair softly.'),
+(22, 'Pediatric Electrolyte Solution 200ml',5,  45.0, 4.6,  95, 130, 0, 'Electral Health',   'WHO-recommended oral rehydration salts with balanced electrolytes for infantile dehydration.'),
+(33, 'Woodwards Gripe Water 130ml',         5,  65.0, 4.6, 170, 110, 0, 'TTK Healthcare',   'Trusted Ayurvedic dill oil and sarjikakshara formulation for rapid relief from wind and teething pain.'),
+(34, 'Himalaya Gentle Baby Wipes (72s Pack)',5,185.0, 4.7, 135, 140, 0, 'Himalaya Baby',     'Extra soft, alcohol-free cleansing wet wipes enriched with Indian Aloe and Lotus extracts.'),
+-- Category 6: Personal Hygiene (IDs 11, 12, 23, 24, 35, 36)
+(11, 'Antibacterial Hand Wash 250ml',       6,  95.0, 4.3,  73, 200, 0, 'Dettol Herbal',     'Enriched with Neem and Tulsi extracts, scientifically tested to eliminate 99.9% of harmful germs.'),
+(12, 'Antiseptic Disinfectant 500ml',       6, 175.0, 4.6,  91,  80, 0, 'LifeGuard Care',    'First-aid antiseptic liquid for wound cleansing, surface disinfection, and personal hygiene.'),
+(23, '70% Isopropyl Hand Sanitizer 500ml',  6, 120.0, 4.7, 130, 180, 0, 'Sterillium Care',  'Hospital-grade quick-drying disinfectant sanitizer gel with skin-moisturizing emollients.'),
+(24, 'Antifungal Dusting Powder 100g',      6, 110.0, 4.6, 105,  95, 0, 'Clocip Health',     'Clotrimazole absorbent powder for prickly heat, athlete foot, fungal itch, and perspiration rash.'),
+(35, 'Dettol Antiseptic Liquid 550ml',      6, 215.0, 4.9, 420, 160, 0, 'Reckitt Benckiser', 'Gold-standard antiseptic liquid protecting families against infection from cuts and scrapes.'),
+(36, 'Savlon First Aid Antiseptic Spray',   6, 115.0, 4.7, 110, 125, 0, 'ITC Limited',       'Convenient touch-free antiseptic spray for minor abrasions and skin scrapes with zero stinging.');
 
--- 6.6 Stock Batches (1-to-1 Sorted Alignment with Medicines 1 to 12)
--- Batch codes formatted consistently as BTC-2026-001 through BTC-2026-012
+-- 6.6 Stock Batches (1-to-1 Sorted Alignment with Medicines 1 to 36)
 INSERT INTO stock_batches (id, medicine_id, batch_no, quantity, expiry_date, status, received_date, supplier_id) VALUES
 (1,   1, 'BTC-2026-001', 240, '2027-11-15', 'ok',       '2026-08-01', 1),
 (2,   2, 'BTC-2026-002', 180, '2027-10-20', 'ok',       '2026-08-01', 1),
 (3,   3, 'BTC-2026-003',  60, '2026-11-10', 'low',      '2026-08-05', 1),
-(4,   4, 'BTC-2026-004',   0, '2026-09-25', 'out',      '2026-08-05', 1),
+(4,   4, 'BTC-2026-004',  40, '2027-02-15', 'ok',       '2026-08-05', 1),
 (5,   5, 'BTC-2026-005', 150, '2027-04-18', 'ok',       '2026-08-10', 2),
 (6,   6, 'BTC-2026-006',  75, '2027-06-30', 'ok',       '2026-08-10', 2),
 (7,   7, 'BTC-2026-007',  90, '2027-08-15', 'ok',       '2026-08-12', 3),
@@ -430,7 +459,31 @@ INSERT INTO stock_batches (id, medicine_id, batch_no, quantity, expiry_date, sta
 (9,   9, 'BTC-2026-009',  40, '2026-10-15', 'low',      '2026-08-15', 3),
 (10, 10, 'BTC-2026-010',  55, '2027-05-30', 'ok',       '2026-08-15', 3),
 (11, 11, 'BTC-2026-011', 200, '2028-01-10', 'ok',       '2026-08-18', 2),
-(12, 12, 'BTC-2026-012',  15, '2026-09-18', 'expiring', '2026-08-18', 2);
+(12, 12, 'BTC-2026-012',  80, '2027-04-20', 'ok',       '2026-08-18', 2),
+(13, 13, 'BTC-2026-013',  95, '2027-08-15', 'ok',       '2026-08-01', 1),
+(14, 14, 'BTC-2026-014', 160, '2027-12-01', 'ok',       '2026-08-01', 1),
+(15, 15, 'BTC-2026-015',  80, '2027-03-25', 'ok',       '2026-08-05', 1),
+(16, 16, 'BTC-2026-016',  65, '2027-01-15', 'ok',       '2026-08-05', 1),
+(17, 17, 'BTC-2026-017', 110, '2028-04-10', 'ok',       '2026-08-10', 2),
+(18, 18, 'BTC-2026-018', 140, '2027-09-30', 'ok',       '2026-08-10', 2),
+(19, 19, 'BTC-2026-019',  75, '2027-07-20', 'ok',       '2026-08-12', 3),
+(20, 20, 'BTC-2026-020',  90, '2027-11-15', 'ok',       '2026-08-12', 3),
+(21, 21, 'BTC-2026-021',  85, '2028-02-18', 'ok',       '2026-08-15', 3),
+(22, 22, 'BTC-2026-022', 130, '2027-05-15', 'ok',       '2026-08-15', 3),
+(23, 23, 'BTC-2026-023', 180, '2028-03-01', 'ok',       '2026-08-18', 2),
+(24, 24, 'BTC-2026-024',  95, '2027-10-30', 'ok',       '2026-08-18', 2),
+(25, 25, 'BTC-2026-025', 220, '2028-03-15', 'ok',       '2026-08-10', 1),
+(26, 26, 'BTC-2026-026', 175, '2027-12-20', 'ok',       '2026-08-10', 1),
+(27, 27, 'BTC-2026-027',  55, '2027-04-10', 'ok',       '2026-08-12', 1),
+(28, 28, 'BTC-2026-028', 130, '2027-09-15', 'ok',       '2026-08-12', 1),
+(29, 29, 'BTC-2026-029', 210, '2028-01-25', 'ok',       '2026-08-14', 2),
+(30, 30, 'BTC-2026-030', 165, '2027-11-30', 'ok',       '2026-08-14', 2),
+(31, 31, 'BTC-2026-031', 150, '2027-10-15', 'ok',       '2026-08-15', 3),
+(32, 32, 'BTC-2026-032', 180, '2028-05-20', 'ok',       '2026-08-15', 3),
+(33, 33, 'BTC-2026-033', 110, '2027-08-10', 'ok',       '2026-08-16', 3),
+(34, 34, 'BTC-2026-034', 140, '2028-02-28', 'ok',       '2026-08-16', 3),
+(35, 35, 'BTC-2026-035', 160, '2028-06-30', 'ok',       '2026-08-18', 2),
+(36, 36, 'BTC-2026-036', 125, '2027-12-15', 'ok',       '2026-08-18', 2);
 
 -- 6.7 Orders (Chronologically Sorted ORD-2026-001 to ORD-2026-005)
 INSERT INTO orders (id, user_email, date, total, status, delivery_name, delivery_address, delivery_phone, time_slot, payment_method, created_at) VALUES

@@ -1388,6 +1388,55 @@
         grid-template-columns: 1fr;
       }
     }
+
+    /* ---------- MODAL DIALOGS & QUICK ORDER ---------- */
+    .modal-backdrop {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(15, 23, 42, 0.68);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      z-index: 999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.25s ease;
+    }
+
+    .modal-backdrop.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .modal-card {
+      background: var(--card-bg);
+      border: 1px solid var(--line-border);
+      border-radius: 18px;
+      width: 100%;
+      max-width: 580px;
+      max-height: 92vh;
+      overflow-y: auto;
+      box-shadow: 0 20px 45px rgba(0, 0, 0, 0.25);
+      padding: 26px 28px;
+      transform: translateY(18px) scale(0.96);
+      transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .modal-backdrop.active .modal-card {
+      transform: translateY(0) scale(1);
+    }
+
+    @keyframes popIn {
+      0% { transform: scale(0.6); opacity: 0; }
+      70% { transform: scale(1.08); opacity: 1; }
+      100% { transform: scale(1); }
+    }
   </style>
 </head>
 
@@ -1398,7 +1447,7 @@
       <polyline points="22 4 12 14.01 9 11.01" />
     </svg><span id="toastMsg">Notification message</span></div>
 
-  <!-- ================= MODAL INVOICE / QUICK VIEW ================= -->
+  <!-- ================= MODAL INVOICE / QUICK ORDER ================= -->
   <div class="modal-backdrop" id="appModal">
     <div class="modal-card" id="modalContent"></div>
   </div>
@@ -1417,6 +1466,7 @@
         <a data-page="medicines">Medicines</a>
         <a data-page="prescriptions">Prescriptions</a>
         <a data-page="orders">Orders</a>
+        <a data-action="quick-order" style="color:var(--primary-700);font-weight:700;display:flex;align-items:center;gap:4px;cursor:pointer;">⚡ Order Now</a>
         <a data-page="profile">Profile</a>
         <a data-page="about">About Us</a>
         <a data-page="contact">Contact</a>
@@ -1450,6 +1500,7 @@
           <span class="cart-badge" id="cartCount">0</span>
         </button>
 
+        <button class="btn btn-primary btn-sm" id="quickOrderNavBtn" style="font-weight:700;box-shadow:0 2px 10px rgba(14,138,90,0.25);">⚡ Place Order</button>
         <button class="btn btn-outline btn-sm" id="accountBtn" data-page="login">Login</button>
         <button class="btn btn-ghost btn-sm" data-page="admin" style="padding:6px 10px;"
           title="Pharmacist Portal">Portal</button>
@@ -2188,7 +2239,57 @@
       { key: 'personalcare', name: 'Personal Hygiene', count: 92, icon: 'M20.8 4.6a5 5 0 0 0-7.1 0L12 6.3l-1.7-1.7a5 5 0 1 0-7.1 7.1L12 20.4l8.8-8.7a5 5 0 0 0 0-7.1z' }
     ];
 
-    const MEDICINES = [];
+    const DEFAULT_MEDICINES = [
+      // Category 1: Pain Relief
+      { id: 1, name: 'Paracetamol 500mg', cat: 'pain', category_id: 1, price: 45, rating: 4.8, reviews: 120, stock: 240, rx: false, manufacturer: 'Apex Health', desc: 'Relieves mild to moderate pain including headache, toothache, muscular ache, and feverish conditions.' },
+      { id: 2, name: 'Ibuprofen 400mg', cat: 'pain', category_id: 1, price: 60, rating: 4.7, reviews: 98, stock: 180, rx: false, manufacturer: 'Abbott Healthcare', desc: 'Fast-acting non-steroidal anti-inflammatory drug (NSAID) for joint aches, arthritis, and fever.' },
+      { id: 13, name: 'Diclofenac Sodium Gel 30g', cat: 'pain', category_id: 1, price: 85, rating: 4.7, reviews: 115, stock: 95, rx: false, manufacturer: 'Novartis Health', desc: 'Targeted topical analgesic gel for instant joint pain, sprains, sports injuries, and muscular stiffness.' },
+      { id: 14, name: 'Cetirizine 10mg Tablets (10s)', cat: 'pain', category_id: 1, price: 35, rating: 4.6, reviews: 140, stock: 160, rx: false, manufacturer: 'Cipla Ltd', desc: 'Non-drowsy antihistamine for quick allergy relief, runny nose, sneezing, and watery itchy eyes.' },
+      { id: 25, name: 'Dolo 650mg Paracetamol Tablets (15s)', cat: 'pain', category_id: 1, price: 32, rating: 4.9, reviews: 340, stock: 220, rx: false, manufacturer: 'Micro Labs', desc: 'Trusted paracetamol formulation recommended for high fever, severe headache, body ache, and viral flu.' },
+      { id: 26, name: 'Combiflam Tablets (20s)', cat: 'pain', category_id: 1, price: 54, rating: 4.7, reviews: 185, stock: 175, rx: false, manufacturer: 'Sanofi India', desc: 'Dual-action Ibuprofen and Paracetamol combination for rapid toothache, backache, and muscular pain relief.' },
+
+      // Category 2: Antibiotics & Prescription
+      { id: 3, name: 'Amoxicillin 250mg', cat: 'antibiotics', category_id: 2, price: 120, rating: 4.6, reviews: 88, stock: 60, rx: true, manufacturer: 'Sun Pharma', desc: 'Broad-spectrum penicillin-class antibiotic for acute bacterial infections of ear, throat, and chest.' },
+      { id: 4, name: 'Azithromycin 500mg (3 Tabs)', cat: 'antibiotics', category_id: 2, price: 150, rating: 4.5, reviews: 41, stock: 40, rx: true, manufacturer: 'Cipla Ltd', desc: 'Macrolide antibiotic used for respiratory tract infections and strep throat. Requires valid Rx.' },
+      { id: 15, name: 'Ciprofloxacin 500mg (10 Tabs)', cat: 'antibiotics', category_id: 2, price: 115, rating: 4.5, reviews: 76, stock: 80, rx: true, manufacturer: 'Ranbaxy Labs', desc: 'Fluoroquinolone antibiotic for urinary tract, gastrointestinal, and bacterial skin infections.' },
+      { id: 16, name: 'Augmentin 625mg Duo (6 Tabs)', cat: 'antibiotics', category_id: 2, price: 210, rating: 4.8, reviews: 125, stock: 65, rx: true, manufacturer: 'GSK Pharma', desc: 'Potent combination of Amoxicillin and Clavulanic Acid to combat resistant respiratory bacterial strains.' },
+      { id: 27, name: 'Taxim-O 200mg Tablets (10s)', cat: 'antibiotics', category_id: 2, price: 175, rating: 4.6, reviews: 92, stock: 55, rx: true, manufacturer: 'Alkem Laboratories', desc: 'Third-generation oral cephalosporin antibiotic for typhoid fever, bronchitis, and ENT infections.' },
+      { id: 28, name: 'Pantocid 40mg Gastro-Resistant (15s)', cat: 'antibiotics', category_id: 2, price: 145, rating: 4.8, reviews: 210, stock: 130, rx: false, manufacturer: 'Sun Pharma', desc: 'Proton-pump inhibitor for lasting relief from acid reflux, peptic ulcers, heartburn, and gastritis.' },
+
+      // Category 3: Vitamins & Supplements
+      { id: 5, name: 'Vitamin C 1000mg Effervescent', cat: 'vitamins', category_id: 3, price: 180, rating: 4.9, reviews: 210, stock: 150, rx: false, manufacturer: 'Redoxon Labs', desc: 'Immune support tablets enriched with Zinc and Antioxidants for daily stamina and vitality.' },
+      { id: 6, name: 'Adult Multivitamin Gummies', cat: 'vitamins', category_id: 3, price: 220, rating: 4.8, reviews: 134, stock: 75, rx: false, manufacturer: 'NutraLife', desc: 'Delicious fruit-flavored chewable gummies packed with Vitamin B-complex, D3, and Iron.' },
+      { id: 17, name: 'Omega-3 Fish Oil 1000mg (60s)', cat: 'vitamins', category_id: 3, price: 320, rating: 4.8, reviews: 160, stock: 110, rx: false, manufacturer: 'TrueBasics', desc: 'Triple-strength EPA & DHA fatty acids supporting cardiovascular vitality, brain function, and joint health.' },
+      { id: 18, name: 'Vitamin D3 60K IU Capsules (4s)', cat: 'vitamins', category_id: 3, price: 130, rating: 4.9, reviews: 240, stock: 140, rx: false, manufacturer: 'Sun Pharma', desc: 'High-potency cholecalciferol weekly dosage for correcting vitamin D deficiency and strengthening bones.' },
+      { id: 29, name: 'Becosules Z B-Complex Capsules (20s)', cat: 'vitamins', category_id: 3, price: 55, rating: 4.8, reviews: 290, stock: 210, rx: false, manufacturer: 'Pfizer Ltd', desc: 'Essential therapeutic B-complex formula with Vitamin C and Zinc to treat mouth ulcers and fatigue.' },
+      { id: 30, name: 'Shelcal 500 Calcium + D3 (15s)', cat: 'vitamins', category_id: 3, price: 135, rating: 4.9, reviews: 310, stock: 165, rx: false, manufacturer: 'Torrent Pharma', desc: 'Bio-available calcium with vitamin D3 ensuring optimal bone mineral density and healthy joint cartilage.' },
+
+      // Category 4: Skin Care
+      { id: 7, name: 'Soothing Aloe Vera Gel 200ml', cat: 'skincare', category_id: 4, price: 210, rating: 4.5, reviews: 64, stock: 90, rx: false, manufacturer: 'Nature Care', desc: '100% organic hydrating cooling gel for sunburns, minor cuts, skin irritation, and dryness.' },
+      { id: 8, name: 'Moisturizing Sunscreen SPF 50', cat: 'skincare', category_id: 4, price: 280, rating: 4.7, reviews: 82, stock: 120, rx: false, manufacturer: 'DermaShield', desc: 'Broad-spectrum UVA/UVB protection enriched with Vitamin E and soothing Chamomile extract.' },
+      { id: 19, name: 'Salicylic Acid 2% Serum 30ml', cat: 'skincare', category_id: 4, price: 299, rating: 4.6, reviews: 110, stock: 75, rx: false, manufacturer: 'DermaCo', desc: 'Exfoliating clarifying serum that penetrates pores to clear blackheads and prevent acne blemishes.' },
+      { id: 20, name: 'Ceramide Moisturizing Cream 100g', cat: 'skincare', category_id: 4, price: 260, rating: 4.8, reviews: 145, stock: 90, rx: false, manufacturer: 'Cetaphil Care', desc: 'Intensive barrier-repair moisturizing cream providing 48-hour continuous hydration for sensitive skin.' },
+      { id: 31, name: 'Betadine 5% Antiseptic Ointment 20g', cat: 'skincare', category_id: 4, price: 75, rating: 4.7, reviews: 145, stock: 150, rx: false, manufacturer: 'Win-Medicare', desc: 'Povidone-iodine microbicidal topical ointment for wound care, minor burn dressing, and laceration healing.' },
+      { id: 32, name: 'Boroline Antiseptic Ayurvedic Cream 40g', cat: 'skincare', category_id: 4, price: 48, rating: 4.8, reviews: 260, stock: 180, rx: false, manufacturer: 'GD Pharmaceuticals', desc: 'Heritage natural antiseptic boric-zinc ointment for chapped lips, cracked heels, dry skin, and cuts.' },
+
+      // Category 5: Baby Care
+      { id: 9, name: 'Baby Colic Relief Drops 30ml', cat: 'babycare', category_id: 5, price: 160, rating: 4.4, reviews: 52, stock: 40, rx: false, manufacturer: 'Himalaya Baby', desc: 'Ayurvedic and pediatric formula designed to quickly soothe infantile colic, spasm, and gas.' },
+      { id: 10, name: 'Zinc Oxide Diaper Rash Cream 50g', cat: 'babycare', category_id: 5, price: 140, rating: 4.6, reviews: 59, stock: 55, rx: false, manufacturer: 'Sebamed Baby', desc: 'Gentle hypoallergenic protective barrier cream with panthenol for delicate baby skin.' },
+      { id: 21, name: 'Gentle Tear-Free Baby Shampoo 200ml', cat: 'babycare', category_id: 5, price: 175, rating: 4.7, reviews: 88, stock: 85, rx: false, manufacturer: 'Johnsons Baby', desc: 'Ophthalmologist-tested ultra-mild no-tears shampoo that cleanses fine infant hair softly.' },
+      { id: 22, name: 'Pediatric Electrolyte Solution 200ml', cat: 'babycare', category_id: 5, price: 45, rating: 4.6, reviews: 95, stock: 130, rx: false, manufacturer: 'Electral Health', desc: 'WHO-recommended oral rehydration salts with balanced electrolytes for infantile dehydration.' },
+      { id: 33, name: 'Woodwards Gripe Water 130ml', cat: 'babycare', category_id: 5, price: 65, rating: 4.6, reviews: 170, stock: 110, rx: false, manufacturer: 'TTK Healthcare', desc: 'Trusted Ayurvedic dill oil and sarjikakshara formulation for rapid relief from wind and teething pain.' },
+      { id: 34, name: 'Himalaya Gentle Baby Wipes (72s Pack)', cat: 'babycare', category_id: 5, price: 185, rating: 4.7, reviews: 135, stock: 140, rx: false, manufacturer: 'Himalaya Baby', desc: 'Extra soft, alcohol-free cleansing wet wipes enriched with Indian Aloe and Lotus extracts.' },
+
+      // Category 6: Personal Hygiene
+      { id: 11, name: 'Antibacterial Hand Wash 250ml', cat: 'personalcare', category_id: 6, price: 95, rating: 4.3, reviews: 73, stock: 200, rx: false, manufacturer: 'Dettol Herbal', desc: 'Enriched with Neem and Tulsi extracts, scientifically tested to eliminate 99.9% of harmful germs.' },
+      { id: 12, name: 'Antiseptic Disinfectant 500ml', cat: 'personalcare', category_id: 6, price: 175, rating: 4.6, reviews: 91, stock: 80, rx: false, manufacturer: 'LifeGuard Care', desc: 'First-aid antiseptic liquid for wound cleansing, surface disinfection, and personal hygiene.' },
+      { id: 23, name: '70% Isopropyl Hand Sanitizer 500ml', cat: 'personalcare', category_id: 6, price: 120, rating: 4.7, reviews: 130, stock: 180, rx: false, manufacturer: 'Sterillium Care', desc: 'Hospital-grade quick-drying disinfectant sanitizer gel with skin-moisturizing emollients.' },
+      { id: 24, name: 'Antifungal Dusting Powder 100g', cat: 'personalcare', category_id: 6, price: 110, rating: 4.6, reviews: 105, stock: 95, rx: false, manufacturer: 'Clocip Health', desc: 'Clotrimazole absorbent powder for prickly heat, athlete foot, fungal itch, and perspiration rash.' },
+      { id: 35, name: 'Dettol Antiseptic Liquid 550ml', cat: 'personalcare', category_id: 6, price: 215, rating: 4.9, reviews: 420, stock: 160, rx: false, manufacturer: 'Reckitt Benckiser', desc: 'Gold-standard antiseptic liquid protecting families against infection from cuts and scrapes.' },
+      { id: 36, name: 'Savlon First Aid Antiseptic Spray 100ml', cat: 'personalcare', category_id: 6, price: 115, rating: 4.7, reviews: 110, stock: 125, rx: false, manufacturer: 'ITC Limited', desc: 'Convenient touch-free antiseptic spray for minor abrasions and skin scrapes with zero stinging.' }
+    ];
+
+    const MEDICINES = [...DEFAULT_MEDICINES];
     const ADMIN_STOCK = [];
     let suppliers = [];
     let orders = [];
@@ -2382,23 +2483,31 @@
     }
 
     function medCardHTML(m) {
+      const rx = Boolean(m.rx_required !== undefined ? m.rx_required : m.rx);
       const stockBadge = m.stock === 0
         ? '<span class="badge badge-red">Out of Stock</span>'
-        : (m.stock < 20 ? '<span class="badge badge-amber">Low Stock</span>' : '<span class="badge badge-green">In Stock</span>');
+        : (m.stock < 20 ? `<span class="badge badge-amber">Low Stock (${m.stock})</span>` : '<span class="badge badge-green">In Stock</span>');
 
-      const rxBadge = m.rx ? '<span class="badge badge-red" style="margin-left:auto;">Rx Required</span>' : '';
+      const rxBadge = rx ? '<span class="badge badge-red" style="margin-left:auto;font-size:10px;">Rx Required</span>' : '';
 
       return `
     <div class="med-card">
-      <div class="med-thumb">${iconSvg('M10.5 20.5L3.5 13.5a5 5 0 1 1 7-7l7 7a5 5 0 1 1-7 7z M8.5 8.5l7 7', 36)}</div>
+      <div class="med-thumb" data-open-med="${m.id}" style="cursor:pointer;" title="View ${m.name}">${iconSvg('M10.5 20.5L3.5 13.5a5 5 0 1 1 7-7l7 7a5 5 0 1 1-7 7z M8.5 8.5l7 7', 36)}</div>
       <div style="display:flex;gap:6px;align-items:center;">
         ${stockBadge} ${rxBadge}
       </div>
-      <h4 data-open-med="${m.id}">${m.name}</h4>
+      <h4 data-open-med="${m.id}" style="cursor:pointer;" title="${m.name}">${m.name}</h4>
+      <p class="small muted" style="margin-top:-6px;font-size:12px;">${m.manufacturer || ''}</p>
       <div class="med-rating">★ ${m.rating} <span>(${m.reviews} reviews)</span></div>
-      <div class="med-price-row">
-        <span class="med-price">${inr(m.price)}</span>
-        <button class="btn btn-primary btn-sm" data-quick-add="${m.id}" ${m.stock === 0 ? 'disabled style="opacity:.5;cursor:not-allowed;"' : ''}>Add to Cart</button>
+      <div class="med-price-row" style="flex-direction:column;gap:8px;align-items:stretch;margin-top:auto;">
+        <div style="display:flex;justify-content:space-between;align-items:baseline;">
+          <span class="med-price">${inr(m.price)}</span>
+          <span class="small muted" style="font-size:11px;">${m.stock > 0 ? (m.stock + ' in stock') : 'Unavailable'}</span>
+        </div>
+        <div style="display:flex;gap:6px;width:100%;">
+          <button class="btn btn-secondary btn-sm" data-quick-add="${m.id}" ${m.stock === 0 ? 'disabled style="opacity:.5;cursor:not-allowed;"' : ''} style="flex:1;padding:7px 8px;font-size:12px;" title="Add item to Cart">🛒 Cart</button>
+          <button class="btn btn-primary btn-sm" data-quick-order="${m.id}" ${m.stock === 0 ? 'disabled style="opacity:.5;cursor:not-allowed;"' : ''} style="flex:1.3;padding:7px 8px;font-size:12px;font-weight:700;" title="Instantly Place Order">⚡ Order Now</button>
+        </div>
       </div>
     </div>
   `;
@@ -2429,8 +2538,17 @@
       const openEl = e.target.closest('[data-open-med]');
       if (openEl) { openDetail(Number(openEl.dataset.openMed)); return; }
       const quickAdd = e.target.closest('[data-quick-add]');
-      if (quickAdd) { addToCart(Number(quickAdd.dataset.quickAdd), 1); }
+      if (quickAdd) { addToCart(Number(quickAdd.dataset.quickAdd), 1); return; }
+      const quickOrder = e.target.closest('[data-quick-order]');
+      if (quickOrder) { openQuickOrderModal(Number(quickOrder.dataset.quickOrder), 1); return; }
+      const orderAction = e.target.closest('[data-action="quick-order"]');
+      if (orderAction) { e.preventDefault(); openQuickOrderModal(); return; }
     });
+
+    const qoNavBtn = $('#quickOrderNavBtn');
+    if (qoNavBtn) {
+      qoNavBtn.addEventListener('click', () => openQuickOrderModal());
+    }
 
     /* ================= 3. MEDICINE DETAIL ================= */
     function openDetail(id) {
@@ -2476,7 +2594,9 @@
     $('#qtyMinus').addEventListener('click', () => { currentQty = Math.max(1, currentQty - 1); $('#qtyVal').textContent = currentQty; });
     $('#qtyPlus').addEventListener('click', () => { currentQty += 1; $('#qtyVal').textContent = currentQty; });
     $('#addToCartBtn').addEventListener('click', () => addToCart(currentMedicineId, currentQty));
-    $('#buyNowBtn').addEventListener('click', () => { addToCart(currentMedicineId, currentQty); navigateTo('cart'); });
+    $('#buyNowBtn').addEventListener('click', () => {
+      openQuickOrderModal(currentMedicineId, currentQty);
+    });
     $('#submitReviewBtn').addEventListener('click', () => {
       const comments = $('#reviewText').value.trim();
       if (!comments) { toast('Please write a review comment'); return; }
